@@ -1,5 +1,5 @@
 import { db } from '../firebase';
-import { ref, set, get, update, onValue, push, child, remove } from 'firebase/database';
+import { ref, set, get, update, onValue, push, child, remove, onDisconnect } from 'firebase/database';
 
 const MAX_PLAYERS = 10;
 
@@ -51,6 +51,11 @@ export const createRoom = async (hostName) => {
   };
 
   await set(roomRef, newRoom);
+  
+  // Setup disconnect handler for host
+  const hostPlayerRef = ref(db, `rooms/${roomCode}/players/host`);
+  onDisconnect(hostPlayerRef).remove();
+  
   return { roomCode, playerId: 'host' };
 };
 
@@ -82,6 +87,9 @@ export const joinRoom = async (roomCode, playerName) => {
     isHost: false,
     avatar: getAvatarFromName(playerName)
   });
+  
+  // Setup disconnect handler - auto remove player on disconnect
+  onDisconnect(playerRef).remove();
 
   return { roomCode, playerId };
 };
@@ -167,6 +175,9 @@ export const leaveRoom = async (roomCode, playerId) => {
   const playerRef = ref(db, `rooms/${roomCode}/players/${playerId}`);
   await remove(playerRef);
   
+  // After a player leaves (or disconnects), ensure a host exists
+  await reassignHostIfNeeded(roomCode);
+
   // Check if room is empty
   const roomRef = ref(db, `rooms/${roomCode}`);
   const snapshot = await get(roomRef);
@@ -175,5 +186,24 @@ export const leaveRoom = async (roomCode, playerId) => {
   if (room && Object.keys(room.players || {}).length === 0) {
     // Delete empty room
     await remove(roomRef);
+  }
+};
+
+export const reassignHostIfNeeded = async (roomCode) => {
+  const roomRef = ref(db, `rooms/${roomCode}`);
+  const snapshot = await get(roomRef);
+  const room = snapshot.val();
+  if (!room) return;
+  const hostId = room.hostId;
+  if (!room.players || !room.players[hostId]) {
+    // No host present – pick the first remaining player as new host
+    const playerIds = Object.keys(room.players || {});
+    if (playerIds.length > 0) {
+      const newHostId = playerIds[0];
+      await update(roomRef, {
+        hostId: newHostId,
+        [`players/${newHostId}/isHost`]: true
+      });
+    }
   }
 };

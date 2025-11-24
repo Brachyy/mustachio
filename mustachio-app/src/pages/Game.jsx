@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { reassignHostIfNeeded } from '../services/roomService';
 import { drawCard, leaveRoom } from '../services/roomService';
 import MiniGameRouter from '../components/MiniGameRouter';
 import EndGame from '../components/EndGame';
@@ -25,6 +26,31 @@ const Game = ({ room, playerId }) => {
   // Refs for piles to calculate positions
   const drawPileRef = useRef(null);
   const discardPileRef = useRef(null);
+
+  // Check if active player still exists (handle disconnection)
+  useEffect(() => {
+    if (!activePlayer && room.status === 'playing') {
+      // Active player disconnected! Skip to next player
+      const nextTurnIndex = (room.currentTurnIndex + 1) % room.order.length;
+      const nextPlayerId = room.order[nextTurnIndex];
+      
+      // Check if next player exists
+      if (room.players[nextPlayerId]) {
+        // Skip to next player
+        import('../services/roomService').then(({ endTurn }) => {
+          endTurn(room.code).catch(console.error);
+        });
+        toast.warning(`${room.players[room.order[room.currentTurnIndex]]?.name || 'Joueur'} s'est déconnecté`);
+      }
+    }
+  }, [activePlayer, room.status, room.currentTurnIndex, room.order, room.code, room.players, toast]);
+
+  // New effect: ensure a host exists after any change in room data
+  useEffect(() => {
+    if (room && room.hostId && (!room.players || !room.players[room.hostId])) {
+      reassignHostIfNeeded(room.code).catch(console.error);
+    }
+  }, [room]);
 
   // Effect to trigger animation when activeCard changes
   useEffect(() => {
@@ -55,31 +81,43 @@ const Game = ({ room, playerId }) => {
             left: endRect.left,
             width: endRect.width,
             height: endRect.height,
-            transform: 'rotateY(180deg) scale(1.0)', // Flip but keep size matched
-            transition: 'all 0.8s cubic-bezier(0.4, 0.0, 0.2, 1)'
+            transform: 'rotateY(180deg)', // Flip but keep size matched
+            transition: 'all 0.6s cubic-bezier(0.4, 0, 0.2, 1)'
           });
         }, 50);
+
+        // After animation, show revealed state
+        setTimeout(() => {
+          setViewState('revealed');
+          setAnimatingCard(null);
+        }, 700);
       }
 
-      // 2. Animation finished (0.8s duration)
-      const animTimer = setTimeout(() => {
-        setViewState('revealed');
-      }, 850);
-
-      // 3. Wait 1s then show minigame
-      const gameTimer = setTimeout(() => {
-        setViewState('minigame');
-      }, 1850); // 0.85s + 1s
-
-      return () => {
-        clearTimeout(animTimer);
-        clearTimeout(gameTimer);
-      };
+      // 3. Wait 1s then show minigame (after revealed state)
+      // This logic is now handled by the useEffect below that watches for 'revealed' state
+      
+      // No cleanup needed here as timers are self-contained for this specific animation
     } else if (!activeCard) {
       setViewState('idle');
       setAnimatingCard(null);
     }
-  }, [activeCard]);
+  }, [activeCard, viewState]); // Added viewState to dependencies to re-run when it changes
+
+  // Effect to transition from revealed to minigame
+  useEffect(() => {
+    if (viewState === 'revealed' && activeCard) {
+      soundService.playCardReveal(); // Play sound when card is revealed
+      const gameTimer = setTimeout(() => {
+        setViewState('minigame');
+      }, 1000); // 1 second after revealed
+
+      return () => {
+        clearTimeout(gameTimer);
+        soundService.stopAll(); // Stop any ongoing sounds when leaving revealed state
+      };
+    }
+  }, [viewState, activeCard]);
+
 
   const handleDraw = async () => {
     if (!isMyTurn || viewState !== 'idle') return;
