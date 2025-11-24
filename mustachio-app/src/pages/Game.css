@@ -73,7 +73,6 @@
   display: flex;
   gap: 6px;
   align-items: center;
-  margin-left: 10px;
 }
 
 .header-card-display .card-value {

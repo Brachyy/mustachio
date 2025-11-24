@@ -202,13 +202,13 @@ const Game = ({ room, playerId }) => {
             <img src="/assets/avatar.png" alt="Avatar" />
           </div>
           <span>{isMyTurn ? "C'est à toi !" : `Tour de ${activePlayer.name}`}</span>
-          {viewState === 'minigame' && activeCard && (
-            <div className="header-card-display">
-              <span className="card-value">{activeCard.value}</span>
-              <span className="card-suit">{activeCard.suit}</span>
-            </div>
-          )}
         </div>
+        {viewState === 'minigame' && activeCard && (
+          <div className="header-card-display">
+            <span className="card-value">{activeCard.value}</span>
+            <span className="card-suit">{activeCard.suit}</span>
+          </div>
+        )}
       </div>
 
       {/* Game Status Bar (Lovers & Mustachio) - Hide during minigame */}
