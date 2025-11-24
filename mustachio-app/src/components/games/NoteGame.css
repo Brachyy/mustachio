@@ -1,0 +1,151 @@
+.note-game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  color: white;
+  padding: 20px;
+  text-align: center;
+}
+
+.game-title {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--primary);
+  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.instruction {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+  color: var(--text-dim);
+}
+
+.note-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.note-btn {
+  padding: 15px 0;
+  font-size: 1.4rem;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  transition: all 0.2s;
+}
+
+.note-btn:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+.note-btn.selected {
+  background: var(--primary);
+  color: black;
+  border-color: var(--primary);
+  transform: scale(1.05);
+  box-shadow: 0 0 15px var(--primary-glow);
+}
+
+.big-note {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--primary);
+  animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  text-shadow: 0 0 30px var(--primary-glow);
+}
+
+/* Blind Overlay */
+.blind-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: black;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.blind-content {
+  text-align: center;
+  animation: pulse 2s infinite;
+}
+
+.blind-icon {
+  font-size: 5rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.blind-content h3 {
+  font-size: 2.5rem;
+  color: var(--primary);
+  margin: 0 0 10px 0;
+}
+
+.timer-display {
+  font-size: 4rem;
+  font-weight: bold;
+  margin-top: 30px;
+  color: white;
+}
+
+.timer-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.timer-bar::after {
+  content: '';
+  display: block;
+  height: 100%;
+  background: var(--primary);
+  width: 100%; /* Controlled by inline style width of parent? No, parent width changes */
+  /* Actually parent width is controlled by React style */
+  background: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.result-box {
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(0,0,0,0.3);
+  margin-bottom: 20px;
+}
+
+.result-box.win {
+  border: 2px solid #2ecc71;
+}
+
+.result-box.lose {
+  border: 2px solid #e74c3c;
+}
+
+.result-box h3 {
+  font-size: 2rem;
+  margin: 0 0 10px 0;
+}
+
+.next-btn {
+  width: 100%;
+  margin-top: 20px;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}

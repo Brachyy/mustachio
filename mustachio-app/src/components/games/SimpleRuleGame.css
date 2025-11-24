@@ -1,0 +1,53 @@
+.simple-game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.game-title {
+  font-size: 2.5rem;
+  color: #f1c40f;
+  margin-bottom: 30px;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  text-align: center;
+}
+
+.rule-card {
+  background: white;
+  color: #333;
+  padding: 30px;
+  border-radius: 20px;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  margin-bottom: 40px;
+  transform: rotate(-2deg);
+}
+
+.rule-text {
+  font-size: 1.5rem;
+  line-height: 1.6;
+  font-weight: 500;
+}
+
+.next-btn {
+  font-size: 1.2rem;
+  padding: 15px 40px;
+  background: #27ae60;
+  border: none;
+  box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
+}
+
+.next-btn:hover {
+  background: #2ecc71;
+  transform: translateY(-2px);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

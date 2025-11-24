@@ -1,0 +1,88 @@
+.purple-game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  color: white;
+}
+
+.cards-row {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.purple-card {
+  width: 60px;
+  height: 90px;
+  background: white;
+  border-radius: 5px;
+  color: black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 5px;
+  font-weight: bold;
+  animation: flipIn 0.5s;
+}
+
+.purple-card.red {
+  color: #e74c3c;
+}
+
+.purple-card.black {
+  color: #2c3e50;
+}
+
+.card-corner {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.card-center {
+  align-self: center;
+  font-size: 1.5rem;
+}
+
+.bottom-right {
+  transform: rotate(180deg);
+}
+
+.card-placeholder {
+  width: 60px;
+  height: 90px;
+  border: 2px dashed rgba(255,255,255,0.5);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
+
+.message-area {
+  height: 30px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  color: #f1c40f;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+
+.suit-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+@keyframes flipIn {
+  from { transform: rotateY(90deg); }
+  to { transform: rotateY(0); }
+}

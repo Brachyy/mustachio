@@ -1,0 +1,322 @@
+.game-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-header {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  height: 60px;
+}
+
+.turn-indicator {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 800;
+  backdrop-filter: blur(5px);
+  font-size: 1.2rem;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.game-board {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  perspective: 1000px;
+  position: relative;
+  padding: 20px;
+}
+
+/* Table Layout */
+.table-layout {
+  display: flex;
+  justify-content: space-between; /* Push piles to sides */
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  max-width: 800px; /* Limit width on large screens */
+  padding: 0 5%; /* Add side padding */
+}
+
+/* Responsive Card Dimensions */
+:root {
+  --card-width: min(35vw, 200px);
+  --card-height: calc(var(--card-width) * 1.5);
+}
+
+.pile-area {
+  position: relative;
+  width: var(--card-width);
+  height: var(--card-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pile-label {
+  position: absolute;
+  top: -30px;
+  font-weight: bold;
+  opacity: 0.7;
+  white-space: nowrap;
+}
+
+/* Card Styles */
+.card-back, .card-back-face {
+  width: var(--card-width);
+  height: var(--card-height);
+  background: linear-gradient(135deg, #2c3e50 0%, #000000 100%);
+  border: 2px solid #f1c40f;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f1c40f;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 900;
+  font-size: clamp(1rem, 4vw, 1.5rem); /* Responsive font size */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+  position: absolute;
+  backface-visibility: hidden;
+}
+
+.card-back::before, .card-back-face::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  border: 2px dashed rgba(241, 196, 15, 0.3);
+  border-radius: 8px;
+}
+
+/* Stack Effect */
+.stack { z-index: 3; }
+.stack-1 { z-index: 2; transform: translate(3px, 3px); }
+.stack-2 { z-index: 1; transform: translate(6px, 6px); }
+
+.card-back.glow {
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.6);
+  animation: pulseGlow 2s infinite;
+  cursor: pointer;
+}
+
+.card-placeholder-slot {
+  width: var(--card-width);
+  height: var(--card-height);
+  border: 2px dashed rgba(255,255,255,0.2);
+  border-radius: 12px;
+}
+
+/* Flying Card Animation */
+.flying-card-wrapper {
+  position: absolute;
+  width: var(--card-width);
+  height: var(--card-height);
+  z-index: 100;
+  transition: all 0.8s cubic-bezier(0.4, 0.0, 0.2, 1);
+  transform-style: preserve-3d;
+  
+  /* Start at Draw Pile (Left side) */
+  /* We use fixed percentages relative to the board container because flexbox positions are hard to target exactly without JS.
+     Assuming piles are centered in their 50% width containers or pushed to sides.
+     With justify-content: space-between and 5% padding:
+     Draw Pile Center ~ 5% + half card width
+     Discard Pile Center ~ 95% - half card width
+  */
+  left: 5%; 
+  top: calc(50% - var(--card-height) / 2);
+  transform-origin: center;
+  transform: rotateY(0deg);
+}
+
+.flying-card-wrapper.fly-to-discard {
+  left: auto;
+  right: 5%; /* End at Discard Area */
+  /* We need to set left to auto and animate right? No, CSS transitions don't like switching properties.
+     Better to animate 'left'.
+     Start: left: 5%
+     End: left: calc(95% - var(--card-width))
+  */
+  left: calc(95% - var(--card-width));
+  transform: rotateY(180deg) scale(1.1);
+}
+
+/* Flipper internals */
+.flipper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.card-face {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.card-back-face {
+  z-index: 2;
+  transform: rotateY(0deg);
+}
+
+.card-front {
+  background: white;
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px;
+  color: black;
+  font-weight: bold;
+}
+
+.card-front.red { color: #e74c3c; }
+.card-front.black { color: #2c3e50; }
+
+.card-corner {
+  display: flex;
+  flex-direction: column;
+  font-size: clamp(0.8rem, 3vw, 1.2rem);
+  line-height: 1;
+}
+
+.card-center-suit {
+  align-self: center;
+  font-size: clamp(2.5rem, 10vw, 4rem);
+}
+
+.bottom-right {
+  transform: rotate(180deg);
+}
+
+.landed-card {
+  width: var(--card-width);
+  height: var(--card-height);
+  animation: land 0.3s ease-out;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.landed-card .card-face {
+  transform: none !important; /* Reset rotation to show face up */
+  position: relative;
+}
+
+/* Mini Game Wrapper */
+.active-game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  padding: 0 20px;
+  animation: slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.card-display-small {
+  background: white;
+  color: black;
+  padding: 8px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  display: flex;
+  gap: 10px;
+  transform: rotate(-2deg);
+}
+
+
+
+.tap-hint {
+  position: absolute;
+  bottom: -50px;
+  width: 200%;
+  left: -50%;
+  text-align: center;
+  font-weight: bold;
+  animation: bounce 1s infinite;
+  white-space: nowrap;
+  font-size: 1.1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 20px rgba(241, 196, 15, 0.4); }
+  50% { box-shadow: 0 0 40px rgba(241, 196, 15, 0.8); }
+  100% { box-shadow: 0 0 20px rgba(241, 196, 15, 0.4); }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+@keyframes land {
+  from { transform: scale(1.1); }
+  to { transform: scale(1); }
+}
+
+/* Game Status Bar */
+.game-status-bar {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin: 10px auto;
+  padding: 10px 20px;
+  max-width: 600px;
+  flex-wrap: wrap;
+  z-index: 20;
+  position: relative;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.status-item.lovers .text {
+  color: #ff69b4;
+}
+
+.status-item.mustachio .text {
+  color: #ffd700;
+}
+
+.status-item .icon {
+  font-size: 1.2rem;
+}

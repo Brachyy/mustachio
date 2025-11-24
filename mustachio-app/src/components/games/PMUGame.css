@@ -1,0 +1,290 @@
+.pmu-game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.pmu-track {
+  width: 100%;
+  background: rgba(0,0,0,0.3);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.track-lane {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.lane-header {
+  width: 40px;
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.lane-steps {
+  flex: 1;
+  display: flex;
+  gap: 3px;
+}
+
+.track-step {
+  flex: 1;
+  height: 40px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 5px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.track-step.milestone {
+  background: rgba(255, 215, 0, 0.2);
+  border: 2px solid rgba(255, 215, 0, 0.5);
+}
+
+.track-step.active {
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.1);
+}
+
+.horse {
+  font-size: 1.5rem;
+  animation: gallop 0.3s infinite alternate, moveIn 0.5s ease-out;
+}
+
+.penalty-card-mini {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 0.6rem;
+  font-weight: bold;
+  background: white;
+  padding: 1px 3px;
+  border-radius: 2px;
+  animation: flipIn 0.5s;
+}
+
+/* Betting Phase */
+.suit-selection, .sips-selection {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.suit-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.suit-btn-large {
+  font-size: 4rem;
+  padding: 20px 30px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 15px;
+  transition: all 0.2s;
+  font-weight: bold;
+}
+
+.suit-btn-large:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.sips-buttons {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+.sip-btn {
+  padding: 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.2s;
+}
+
+.sip-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.bet-confirmed {
+  background: rgba(76, 175, 80, 0.2);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.bets-status {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.auto-start-msg {
+  color: #4CAF50;
+  font-weight: bold;
+  animation: pulse 1s infinite;
+}
+
+/* Racing Phase */
+.race-card-display {
+  margin: 20px 0;
+  display: flex;
+  justify-content: center;
+}
+
+.drawn-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  font-weight: bold;
+  animation: flipIn 0.4s, pulse 0.3s;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.card-value {
+  font-size: 3rem;
+}
+
+.card-suit {
+  font-size: 3rem;
+}
+
+.card-placeholder {
+  background: rgba(255,255,255,0.1);
+  padding: 30px 50px;
+  border-radius: 15px;
+  font-size: 3rem;
+  color: rgba(255,255,255,0.3);
+}
+
+.revealed-penalties {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.penalty-cards-display {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.penalty-card-large {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  min-width: 100px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  animation: flipIn 0.5s;
+}
+
+.penalty-label {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.penalty-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Finished Phase */
+.finished-phase {
+  text-align: center;
+  padding: 20px;
+}
+
+.win-msg {
+  color: #4CAF50;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+.lose-msg {
+  color: #e74c3c;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 20px 0;
+}
+
+/* Animations */
+@keyframes gallop {
+  from { transform: translateY(0) rotate(-5deg); }
+  to { transform: translateY(-5px) rotate(5deg); }
+}
+
+@keyframes moveIn {
+  from { 
+    transform: translateX(-20px) scale(0.5);
+    opacity: 0;
+  }
+  to { 
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes flipIn {
+  from {
+    transform: rotateY(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .suit-btn-large {
+    font-size: 3rem;
+    padding: 15px 20px;
+  }
+  
+  .sips-buttons {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 5px;
+  }
+  
+  .suit-icon {
+    font-size: 2.5rem;
+  }
+  
+  .drawn-card {
+    padding: 20px;
+  }
+  
+  .card-value, .card-suit {
+    font-size: 2rem;
+  }
+}

@@ -1,0 +1,121 @@
+.cupid-game-container {
+  text-align: center;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cupid-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  animation: float 2s ease-in-out infinite;
+}
+
+.waiting-cupid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+}
+
+.sub-text {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  margin-top: 5px;
+}
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 15px;
+  margin: 20px 0;
+}
+
+.player-card-select {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  border: 2px solid transparent;
+}
+
+.player-card-select:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.player-card-select.selected {
+  background: rgba(255, 105, 180, 0.2); /* Pink tint */
+  border-color: #ff69b4;
+  transform: translateY(-5px);
+}
+
+.player-avatar {
+  font-size: 2rem;
+  margin-bottom: 5px;
+}
+
+.player-name {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.heart-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 1.5rem;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.confirm-btn {
+  margin-top: 20px;
+  width: 100%;
+}
+
+.lovers-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 30px 0;
+  font-size: 1.5rem;
+}
+
+.lover-name {
+  font-weight: bold;
+  color: #ff69b4;
+}
+
+.heart-animation {
+  font-size: 3rem;
+  animation: heartbeat 1.5s infinite;
+}
+
+.lovers-rule {
+  font-style: italic;
+  margin-bottom: 20px;
+  background: rgba(255, 105, 180, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes heartbeat {
+  0% { transform: scale(1); }
+  14% { transform: scale(1.3); }
+  28% { transform: scale(1); }
+  42% { transform: scale(1.3); }
+  70% { transform: scale(1); }
+}
+
+@keyframes popIn {
+  from { transform: scale(0); }
+  to { transform: scale(1); }
+}

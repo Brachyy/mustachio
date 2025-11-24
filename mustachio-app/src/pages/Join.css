@@ -1,0 +1,69 @@
+.join-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-md);
+  position: relative;
+  z-index: 1;
+}
+
+.join-header {
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.join-header h2 {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  margin-right: 44px; /* Balance the back button width */
+}
+
+.join-form {
+  width: 100%;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.input-group label {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+  margin-left: 5px;
+}
+
+.join-input {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: 2px solid var(--glass-border);
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  font-size: 1.2rem;
+  text-align: center;
+  transition: var(--transition-normal);
+  backdrop-filter: blur(5px);
+}
+
+.join-input:focus {
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.1);
+  outline: none;
+  box-shadow: 0 0 20px rgba(241, 196, 15, 0.2);
+}
+
+.join-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,65 @@
+Mustachio : Préparez vos moustaches
+
+Mustachio est un jeu multijoueur (3-20 joueurs) sur android et ios, on utilisera firebase pour le mutlijoueurs (1 téléphone host une room les autres join), c'est un jeu de carte(52 cartes) tour par tour, chaque carte correspond à un mini-jeu, chaque joueur tire chacun leur tour une carte qui lance alors le mini-jeu correspondant.
+
+L'apparence du jeu devra etre moderne, animation, transition, écran de chargement, design, animation de tirage de carte, animation de lancé de dés, animation de chronomètre etc, le jeu devra etre fluide, donc pas trop de clique utilisateurs et pas d'infomation superflues.
+
+La plus part des actions dans le jeu seront vue par tous les utilisateurs, sauf certains jeu, ou chaque joueurs a un écran différent.
+Certain jeu marque en rules only, n'ont pas de jeu a proprement parlé il faut juste affiché les règles et un bouton fermer pour fermer les règles ensuite on passe au joueurs suivant.
+Chaque joueur est représenter par une couleur et un nom, couleur choisit aléatoirement parmis 20 couleurs, et nom rentrer par l'utilisateur lors du join ou de l'host d'une partie.
+Les joueurs sont appélé les moustachus, donc pas joueur actuel, mais moustachus actuel, avec un design et une moustache de la couleur du joueur.
+il y aura la possibilité de rejoindre une partie en cours ou de quitter une partie en cours, si on rejoins une partie en cours, alors on est dans un écran de chargement jusqu'a ce que le mini-jeu en cours soit terminé pour ne pas provoquer de bug.
+Le joueur qui host peut choisir le nombre de gorgée de chaque jeu dans un petit menu de paramètre.
+Les jeux qui nécéssite des cartes ne prennent pas les cartes dans le jeu de carte principales.
+On pourra utiliser n'importe quelle technologie pour developper le jeu, aucune limitation tant que c'est gratuit.
+
+Le cheminement utilisateurs ressemble a cela :
+lancement de l'app, ecran de chargement stylisé -> menu d'acceuil avec un bouton Créer une Table et un bouton Rejoindre une Table ->(clique sur Creer -> demande de nom d'utilisateur et du nombre de joueur, bouton Créér la Table -> Affichage du Code de la Table et de la liste de Joueur présent, d'un bouton démarrer la Partie et d'un bouton Fermer la Table, ainsi qu'un bouton parametre pour les gorgées par jeu, certains jeu aurons plusieurs paramètres car plusieur sanction etc) ou (clique sur rejoindre -> soit par code ou dans une liste des Tables disponible-> quand on rentre un code ou qu'on clique sur une Table, demande de nom d'utilisateur-> affichage du code de la Table et de la liste de Joueur ainsi que en attente de l'hote pour demarrer, pas accès au paramètre)->(partie démarrer) jeu le premier joueur tire une carte(les cartes sont tiré aléatoirement comme pour un vraie paquet) et le premier jeu commence
+
+
+le code devra etre propre et organisé, soutenable par la suite, séparation des fonctionnalité etc.
+chaque mini-jeux aura un logo assigné.
+le jeu aura un style cartoon pour l'effet jeu vidéo de société fun
+
+
+
+Liste des mini-jeux par Carte :
+
+ORAL GAME :
+
+Carte 1 - Roi du cercle : le joueur actuelle invente une nouvelle règle, la règle est valable jusqu'au prochaine as (only rules).
+
+Carte 3 - Le 3-3-3 : le joueur précédent du joueur choisit un theme à l'oral puis lance le chrono, le joueur doit trouver trois choses qui match avec le thème en 3 secondes, sinon il boit 3 gorgée, tout le monde voit le chronométre, mais seul le joueur précédent peut le lancer et l'arreter, si le chrono arrive à zéro alors c'est perdu et un indicateur sonore est émis, si le joueur précédent clique sur validé pendant les 3 secondes alors c'est gagné.
+
+Carte 6 - SIx Time : une fois tous les joueurs pret (chaque joueur doit indiquer si il est pret ), une rond de  chargement se lance en gros sur tous les écran et une fois finis un chrono invisible se lance pour tous les joueurs, chaque joueurs peut alors arreter son chrono à l'aide d'un bouton, si le chrono est a un multiple de 6 avec 50 centieme de seconde pret alors il peut distribué le multiple en gorgées sinon il le boit exemple chrono arreter à 6,30s on distribue 1 à 11,70s on distribue 2, à 17,48s on boit 3, le jeu s'arrete quand tout les joueurs ont arrété leur chrono, une fois que l'on arreter son chrono on voit alors les chrono de tous les autres joueurs en cours ou arreter.
+
+Carte 7 - Le Loto des Doigts : le joueur à trois choix, deviner le nombre exact(2 nb de joueur en gorgée) soit deviner dans une borne de 2 ex:entre 4 et 6 4 et 6 inclus (1*nb joueur/1.5 on arrondi au supérieur en gorgée) ou borne de 4 (1 gorgée) sinon il trouve il distribue la valeur, sinon il boit respectivement 3,2 et 1 gorgée pour respecter le risk/reward, une fois que le joueur a choisi, tous les autre joueurs choisissent chacun entre 1 et 2 (nombre de doigt qu'ils choisissent de lever chacun) ensuite on fait la somme de toute les valeurs et on compare au choix du joueur principale pour savoir les gorgées.
+
+Carte 8 - La Méduse : tout le monde ferme les yeux et baisse la tete, le joueur  dit mééééééduse à la fin du mot tous les joueur lèvent la tete et regarde un autre joueur, si deux joueurs se regarde ils doivent trinquer et boire 2 gorgées. (only rules)
+
+Carte 9 - Mini-bac : le joueur choisit un thème et chaque joueur doit dire un therme qui correspond au theme en suivant les lettre de l'alphabet, donc fruit -> abricot,banace, cerise,date etc, le joueur qui n'en a plus boit 3 gorgées. (only rules)
+
+Carte 10 - Le jeu de la Note : le joueur ferme les yeux et les autres joueurs se mettent d'accord sur une note de 1 à 10, chaque joueur(pas le joueur principale qui a un ecran d'attente) vote en temps reel pour une note et on voit en temps reel qui vote pour quelle note grace au couleur de moustache, au bout de 8 secondes la note avec le plus de vote est choisi, on alors l'affiche en gros pendant 3 secondes, ensuite le joueur peut réouvrir les yeux et demande à chaque joueur un theme à l'oral le joueur doit alors lui donné un therme qui correspond a la note dans le theme un theme different par joueur ou non, ensuite il choisit une note si il trouve la bonne note il distribue 4  gorgées sinon il boit 2.
+
+Carte Roi - Mustachio : le joueur devient le mustachio, il peut alors a tout moment de la partie, une fois par tour et jusqu'a ce qu'un autre mustachio soit désigné, mettre ses deux doigt sous le nez, tout les autres joueurs doivent alors faire le meme gestes, le dernier joueur a le faire voit sa prochaine sanction en gorgée doublé, le mustachio a également une balle qu'il peut tirer sur un joueur lorsque celui-ci boit, le joueur en question voit alors sa sanction en gorgée doublé, si le mustachio n'a pas tirer sa balle et qu'un autre mustachio est désigné alors il voit lui aussi sa prochaine sanction doublé (only rules) (un petit bouton sur l'écran de jeu principale du mustachio est présent pour qu'il puisse tirer, le bouton sert uniquement a detecter si le mustachio a tiré ou non).
+
+Carte Reine - Cupidon : le joueur désigne deux joueurs (dans une liste de tous les joueurs scrollable) qui sont maintenant lié par les liens de l'amour, si un joueur prend 2 gorgées l'autre joueur les prends également, si lors d'un jeu les deux joueurs prennent des gorgée différentes alors les deux joueurs prennent le nombre de gorgées le plus élevé, les joueurs sont lié jusqu'au prochain cupidon. (les amoureux doivent etre affiché sur l'écran de jeu princpale de tout le monde)
+
+
+
+DICE GAME :
+
+Carte 2 - Duel du Con : le joueur choisit un autre joueur à defier, les deux lance un dé, le plus bas boit la différence qu'il y a entre les deux dés en gorgées, si les deux dé sont égaux alors les deux boivent la valeur du dé.
+
+Carte 4 -  Trinquette : le joueur qui tire le 4 lance 2 dés et annonce son score à l'oral, on lit toujours le plus grand dés en premier, par ordre de puissance, 32 est le plus faible et 66 le plus fort, les doubles sont toujours plus puissant que le reste, 11 puis 22 puis 33 puis 44 puis 55 puis 66, 11 est plus puissant que 56, le joueur suivant peut soit dire ok ou menteur, si il dit menteur alors les dés du joueur précédent sont révélé, si il mentait il boit 4 sinon celui qui a dit menteur boit 4, si il dit ok alors on ne revèle pas les dès du joueur précédent et il lance les dés, et ainsi de suite, la valeur la plus haute est la trinquette le 21 et elle vaut 1 cul sec.
+
+
+
+CARD GAME:
+
+Carte 5 - Purple : on demande chacun son tour à chaque joueur, rouge ou noir et lui donne la carte, puis plus ou moins que sa carte précédente, puis entre ou pas entre ses deux carte précédentes, à chaque erreur le joueur concerné met 2 gorgée dans sa banque, pour finir on lui demande le signe de sa derniere carte donc carreau coeur etc, si il a bon il distribue sa banque sinon il la boit, chaque joueur fait le jeu complet, et tout le monde assisste à chaque jeux pour le suspens.
+
+Carte Valet - PMU : chaque joueur mise sur une couleur rouge ou noir et un nombre de gorgé, les gagnants donne leurs gorgées et les perdant boivent leurs gorgées, une fois que tous les joueurs on validé leurs mise, on place alors deux chevaux un rouge et un noir sur la ligne de départ, ensuite on tire les carte une à une, chaque carte fait avancer le cheval de sa couleur d'un palier, il y a 6 paliers de 0 (ligne de départ) à 6 la ligne d'arriver, à chaque palier jouable (1-5) il y a une carte malus face caché, quand les deux chevaux ont atteint ou dépassé un palier alors la carte se retourne et la couleur du cheval correspondant recule de 1, une fois un cheval arrivé sa couleur gagne c'est la fin du jeu et on distribue les gorgée.
+
+
+
