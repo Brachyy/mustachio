@@ -127,13 +127,33 @@ const SixTimeGame = ({ room, isMyTurn, onNext, playerId }) => {
   };
 
   const calculateSips = (time) => {
-    const remainder = time % 6;
-    const diff = Math.min(remainder, 6 - remainder);
-    
-    if (diff <= 0.5) {
-      return { type: 'give', amount: Math.floor(time / 6) || 1 };
+    // Determine which range the time falls into
+    // 0-9s = 1 sip, 9-15s = 2 sips, 15-21s = 3 sips, etc.
+    let sipsAmount;
+    if (time < 9) {
+      sipsAmount = 1;
+    } else if (time < 15) {
+      sipsAmount = 2;
+    } else if (time < 21) {
+      sipsAmount = 3;
+    } else if (time < 27) {
+      sipsAmount = 4;
+    } else if (time < 33) {
+      sipsAmount = 5;
     } else {
-      return { type: 'drink', amount: Math.ceil(diff * 2) };
+      sipsAmount = 6;
+    }
+    
+    // Check if close to a multiple of 6 (±0.50s)
+    const remainder = time % 6;
+    const distanceToMultiple = Math.min(remainder, 6 - remainder);
+    
+    if (distanceToMultiple <= 0.50) {
+      // Close enough to a multiple of 6 → distribute
+      return { type: 'give', amount: sipsAmount };
+    } else {
+      // Not close enough → drink
+      return { type: 'drink', amount: sipsAmount };
     }
   };
 
