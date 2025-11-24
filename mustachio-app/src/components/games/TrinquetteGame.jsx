@@ -79,16 +79,20 @@ const TrinquetteGame = ({ room, isMyTurn, onNext, playerId }) => {
 
   const handleDecision = async (decision) => {
     if (decision === 'liar') {
+      // Only reveal dice when calling liar
       await update(ref(db, `rooms/${room.code}/miniGameState`), {
         step: 'result',
         decision: 'liar',
         deciderId: playerId // Track who called liar
       });
     } else {
+      // OK: continue to next player without revealing
+      soundService.playClick();
       await update(ref(db, `rooms/${room.code}/miniGameState`), {
         step: 'rolling',
         currentRoller: nextPlayerId,
-        dice: null
+        dice: null,
+        announcedScore: null
       });
     }
   };
