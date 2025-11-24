@@ -1,0 +1,477 @@
+/* ========================================
+   MOBILE RESPONSIVE STYLES FOR MUSTACHIO
+   ======================================== */
+
+/* Home Page Mobile */
+@media (max-width: 768px) {
+  .home-container {
+    padding: 20px 15px !important;
+  }
+  
+  .home-title {
+    font-size: 2.5rem !important;
+  }
+  
+  .home-subtitle {
+    font-size: 1rem !important;
+  }
+  
+  .home-buttons {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 15px !important;
+  }
+  
+  .home-buttons .btn {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+/* Lobby Page Mobile */
+@media (max-width: 768px) {
+  .lobby-container {
+    padding: 15px !important;
+  }
+  
+  .lobby-header {
+    flex-direction: column !important;
+    gap: 10px !important;
+    align-items: stretch !important;
+  }
+  
+  .room-code {
+    font-size: 1.5rem !important;
+  }
+  
+  .players-grid {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
+    gap: 10px !important;
+  }
+  
+  .player-card {
+    padding: 12px !important;
+  }
+  
+  .player-avatar {
+    font-size: 2rem !important;
+  }
+  
+  .start-game-btn {
+    width: 100% !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    border-radius: 0 !important;
+    padding: 18px !important;
+    z-index: 100 !important;
+  }
+}
+
+/* Game Page Mobile */
+@media (max-width: 768px) {
+  .game-container {
+    padding: 0 !important;
+  }
+  
+  .game-header {
+    padding: 10px 15px !important;
+    height: auto !important;
+    min-height: 50px !important;
+  }
+  
+  .turn-indicator {
+    font-size: 0.9rem !important;
+    padding: 8px 16px !important;
+    position: static !important;
+    transform: none !important;
+    margin: 5px auto !important;
+  }
+  
+  .game-status-bar {
+    padding: 8px 15px !important;
+    font-size: 0.85rem !important;
+    flex-wrap: wrap !important;
+  }
+  
+  .game-board {
+    padding: 10px !important;
+  }
+  
+  .table-layout {
+    max-width: 100% !important;
+    padding: 0 !important;
+  }
+  
+  :root {
+    --card-width: min(30vw, 120px) !important;
+  }
+  
+  .pile-label {
+    font-size: 0.8rem !important;
+    top: -25px !important;
+  }
+  
+  .tap-hint {
+    font-size: 0.9rem !important;
+    bottom: -40px !important;
+  }
+  
+  .card-display-small {
+    font-size: 0.85rem !important;
+    padding: 6px 12px !important;
+    margin-bottom: 10px !important;
+  }
+}
+
+/* Six Time Game Mobile */
+@media (max-width: 768px) {
+  .six-time-container {
+    padding: 15px 10px !important;
+  }
+  
+  .ready-list {
+    max-width: 100% !important;
+    margin: 15px 0 !important;
+  }
+  
+  .countdown-number {
+    font-size: 5rem !important;
+  }
+  
+  .chrono-placeholder {
+    font-size: 2rem !important;
+  }
+  
+  .stop-btn {
+    width: 150px !important;
+    height: 150px !important;
+    font-size: 1.5rem !important;
+  }
+  
+  .results-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)) !important;
+    gap: 8px !important;
+  }
+  
+  .result-card {
+    padding: 8px !important;
+  }
+}
+
+/* Finger Lotto Game Mobile */
+@media (max-width: 768px) {
+  .finger-lotto-container {
+    padding: 15px 10px !important;
+  }
+  
+  .glass-panel {
+    padding: 12px !important;
+  }
+  
+  .input-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .glass-input {
+    width: 100% !important;
+    font-size: 16px !important;
+  }
+  
+  .input-row .btn {
+    width: 100% !important;
+  }
+  
+  .finger-buttons {
+    gap: 12px !important;
+  }
+  
+  .finger-btn {
+    min-width: 70px !important;
+    padding: 12px !important;
+  }
+  
+  .finger-btn .emoji {
+    font-size: 1.8rem !important;
+  }
+  
+  .reveal-grid {
+    gap: 10px !important;
+  }
+  
+  .bet-display {
+    max-width: 100% !important;
+    padding: 12px !important;
+  }
+}
+
+/* Note Game Mobile */
+@media (max-width: 768px) {
+  .note-game-container {
+    padding: 15px 10px !important;
+  }
+  
+  .note-grid {
+    grid-template-columns: repeat(5, 1fr) !important;
+    gap: 8px !important;
+  }
+  
+  .note-btn {
+    padding: 12px !important;
+    font-size: 1.2rem !important;
+  }
+  
+  .big-note {
+    font-size: 4rem !important;
+  }
+  
+  .blind-icon {
+    font-size: 3rem !important;
+  }
+}
+
+/* PMU Game Mobile */
+@media (max-width: 768px) {
+  .pmu-game-container {
+    padding: 15px 10px !important;
+    max-width: 100% !important;
+  }
+  
+  .pmu-track {
+    padding: 10px !important;
+  }
+  
+  .lane-header {
+    width: 30px !important;
+    font-size: 1.5rem !important;
+  }
+  
+  .track-step {
+    height: 35px !important;
+  }
+  
+  .horse {
+    font-size: 1.2rem !important;
+  }
+  
+  .suit-btn-large {
+    font-size: 3rem !important;
+    padding: 15px 20px !important;
+  }
+  
+  .sips-buttons {
+    max-width: 100% !important;
+    gap: 8px !important;
+  }
+  
+  .sip-btn {
+    padding: 12px !important;
+    font-size: 1rem !important;
+  }
+  
+  .drawn-card {
+    padding: 20px !important;
+  }
+  
+  .card-value, .card-suit {
+    font-size: 2.5rem !important;
+  }
+}
+
+/* Trinquette Game Mobile */
+@media (max-width: 768px) {
+  .trinquette-container {
+    padding: 15px 10px !important;
+  }
+  
+  .dice-area {
+    gap: 15px !important;
+    margin: 20px 0 !important;
+  }
+  
+  .countdown-timer {
+    font-size: 3rem !important;
+  }
+  
+  .decision-controls {
+    flex-direction: column !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+  
+  .decision-controls .btn {
+    width: 100% !important;
+  }
+}
+
+/* Purple Game Mobile */
+@media (max-width: 768px) {
+  .purple-game-container {
+    padding: 15px 10px !important;
+  }
+  
+  .cards-row {
+    gap: 8px !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
+  
+  .purple-card {
+    width: 80px !important;
+    height: 120px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .card-center {
+    font-size: 2rem !important;
+  }
+  
+  .controls {
+    width: 100% !important;
+  }
+  
+  .controls .btn {
+    width: 100% !important;
+    margin: 5px 0 !important;
+  }
+}
+
+/* Cupid Game Mobile */
+@media (max-width: 768px) {
+  .cupid-game-container {
+    padding: 15px 10px !important;
+  }
+  
+  .cupid-icon {
+    font-size: 3rem !important;
+  }
+  
+  .players-grid {
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)) !important;
+    gap: 10px !important;
+  }
+  
+  .player-card-select {
+    padding: 12px !important;
+  }
+  
+  .player-avatar {
+    font-size: 1.8rem !important;
+  }
+  
+  .confirm-btn {
+    width: 100% !important;
+  }
+  
+  .lovers-display {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .heart-animation {
+    font-size: 2rem !important;
+  }
+}
+
+/* Duel Game Mobile */
+@media (max-width: 768px) {
+  .duel-container {
+    padding: 15px 10px !important;
+  }
+  
+  .player-selection {
+    flex-direction: column !important;
+    gap: 10px !important;
+  }
+  
+  .player-btn {
+    width: 100% !important;
+  }
+}
+
+/* Timer Game Mobile */
+@media (max-width: 768px) {
+  .timer-game-container {
+    padding: 15px 10px !important;
+  }
+  
+  .timer-display {
+    font-size: 3rem !important;
+  }
+}
+
+/* Simple Rule Game Mobile */
+@media (max-width: 768px) {
+  .simple-game-container {
+    padding: 20px 15px !important;
+  }
+  
+  .rule-card {
+    padding: 20px 15px !important;
+  }
+  
+  .rule-text {
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+  }
+  
+  .next-btn {
+    width: 100% !important;
+    max-width: none !important;
+  }
+}
+
+/* Join Page Mobile */
+@media (max-width: 768px) {
+  .join-container {
+    padding: 20px 15px !important;
+  }
+  
+  .join-form {
+    width: 100% !important;
+    max-width: none !important;
+  }
+  
+  .join-input {
+    font-size: 16px !important;
+    padding: 14px !important;
+  }
+}
+
+/* Landscape mode adjustments */
+@media (max-width: 768px) and (orientation: landscape) {
+  .game-board {
+    padding: 5px !important;
+  }
+  
+  :root {
+    --card-width: min(25vw, 100px) !important;
+  }
+  
+  .stop-btn {
+    width: 120px !important;
+    height: 120px !important;
+  }
+  
+  .countdown-number {
+    font-size: 4rem !important;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 360px) {
+  .game-title {
+    font-size: 1.5rem !important;
+  }
+  
+  .btn {
+    padding: 10px 14px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  :root {
+    --card-width: min(28vw, 100px) !important;
+  }
+}

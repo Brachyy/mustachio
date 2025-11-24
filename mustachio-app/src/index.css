@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+@import url('./mobile.css');
 
 :root {
   font-family: 'Outfit', sans-serif;
@@ -146,4 +147,62 @@ button:active {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+}
+
+/* Mobile Optimizations */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+    padding-bottom: max(0px, env(safe-area-inset-bottom));
+  }
+}
+
+/* Touch-friendly buttons - minimum 44px */
+@media (max-width: 768px) {
+  .btn {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 14px 20px;
+    font-size: 1rem;
+  }
+  
+  .btn-icon {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 12px;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+  
+  /* Better touch targets */
+  button, a, input, select {
+    -webkit-tap-highlight-color: rgba(241, 196, 15, 0.3);
+  }
+  
+  /* Improve scrolling on iOS */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent text selection on buttons */
+  button {
+    -webkit-user-select: none;
+    user-select: none;
+  }
+}
+
+/* Small phones */
+@media (max-width: 375px) {
+  :root {
+    font-size: 14px;
+  }
+  
+  .btn {
+    padding: 12px 16px;
+    font-size: 0.9rem;
+  }
 }
