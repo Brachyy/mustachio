@@ -211,28 +211,6 @@ const Game = ({ room, playerId }) => {
         )}
       </div>
 
-      {/* Game Status Bar (Lovers & Mustachio) - Hide during minigame */}
-      {(room.lovers || room.mustachio) && viewState !== 'minigame' && (
-        <div className="game-status-bar glass-panel">
-          {room.lovers && (
-            <div className="status-item lovers">
-              <span className="icon">💘</span>
-              <span className="text">
-                {room.lovers[0].name} & {room.lovers[1].name}
-              </span>
-            </div>
-          )}
-          {room.mustachio && (
-            <div className="status-item mustachio">
-              <span className="icon">🥸</span>
-              <span className="text">
-                {room.players[room.mustachio]?.name} est le Mustachio
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-
       {/* Logo Overlay Animation */}
       {logoOverlay && (
         <div className="game-logo-overlay">
@@ -313,6 +291,24 @@ const Game = ({ room, playerId }) => {
             <div className="card-face card-back-face">MUSTACHIO</div>
             {renderCardFace(animatingCard)}
           </div>
+        </div>
+      )}
+
+      {/* Status Section - Always visible */}
+      {(room.lovers || room.mustachio) && (
+        <div className="status-section">
+          {room.lovers && (
+            <div className="status-badge lovers-badge">
+              <span className="status-icon">💘</span>
+              <span className="status-text">{room.lovers[0].name} & {room.lovers[1].name}</span>
+            </div>
+          )}
+          {room.mustachio && (
+            <div className="status-badge mustachio-badge">
+              <span className="status-icon">🥸</span>
+              <span className="status-text">{room.players[room.mustachio]?.name}</span>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -383,3 +383,62 @@
 .status-item .icon {
   font-size: 1.2rem;
 }
+
+/* Status Section - Bottom Right */
+.status-section {
+  position: fixed;
+  bottom: 15px;
+  right: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.lovers-badge {
+  background: linear-gradient(135deg, rgba(255, 105, 180, 0.9), rgba(255, 20, 147, 0.9));
+  border: 2px solid #ff69b4;
+  color: white;
+}
+
+.mustachio-badge {
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.9), rgba(255, 193, 7, 0.9));
+  border: 2px solid #ffd700;
+  color: #1a1a2e;
+}
+
+.status-icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.status-text {
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
