@@ -116,12 +116,12 @@ const TrinquetteGame = ({ room, isMyTurn, onNext, playerId }) => {
         <Dice3D 
           value={dice.d1} 
           rolling={isRolling || (step === 'rolling' && isRoller && isRolling)} 
-          hidden={!isRoller && step !== 'result'}
+          hidden={!isRoller && !(step === 'result' && room.miniGameState?.decision === 'liar')}
         />
         <Dice3D 
           value={dice.d2} 
           rolling={isRolling || (step === 'rolling' && isRoller && isRolling)} 
-          hidden={!isRoller && step !== 'result'}
+          hidden={!isRoller && !(step === 'result' && room.miniGameState?.decision === 'liar')}
         />
       </div>
 
