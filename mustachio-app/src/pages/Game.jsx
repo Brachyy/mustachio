@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { drawCard } from '../services/roomService';
+import { drawCard, leaveRoom } from '../services/roomService';
 import MiniGameRouter from '../components/MiniGameRouter';
 import EndGame from '../components/EndGame';
 import { soundService } from '../services/soundService';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { LogOut } from 'lucide-react';
+import { useToast } from '../components/Toast';
 import './Game.css';
 
 const Game = ({ room, playerId }) => {
   const navigate = useNavigate();
+  const toast = useToast();
   const isMyTurn = room.order[room.currentTurnIndex] === playerId;
   const activePlayerId = room.order[room.currentTurnIndex];
   const activePlayer = room.players[activePlayerId];
@@ -89,6 +91,18 @@ const Game = ({ room, playerId }) => {
     }
   };
 
+  const handleLeave = async () => {
+    if (window.confirm('Voulez-vous vraiment quitter la partie ?')) {
+      try {
+        await leaveRoom(room.code, playerId);
+        toast.info('Vous avez quitté la partie');
+        navigate('/');
+      } catch (error) {
+        toast.error('Erreur lors de la déconnexion');
+      }
+    }
+  };
+
   const renderCardFace = (card) => (
     <div className={`card-face card-front ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`}>
       <div className="card-corner top-left">
@@ -111,8 +125,8 @@ const Game = ({ room, playerId }) => {
   return (
     <div className="game-container">
       <div className="game-header">
-        <button className="btn-icon" onClick={() => navigate('/')}>
-          <ArrowLeft size={24} />
+        <button className="btn-icon" onClick={handleLeave} title="Quitter la partie">
+          <LogOut size={24} />
         </button>
         <div className="turn-indicator">
           {isMyTurn ? "C'est à toi !" : `C'est au tour de ${activePlayer.name}`}

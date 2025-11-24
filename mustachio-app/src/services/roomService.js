@@ -1,7 +1,19 @@
 import { db } from '../firebase';
-import { ref, set, get, update, onValue, push, child } from 'firebase/database';
+import { ref, set, get, update, onValue, push, child, remove } from 'firebase/database';
 
 const MAX_PLAYERS = 10;
+
+// Unambiguous characters (no 0, O, I, 1, etc.)
+const ROOM_CODE_CHARS = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ';
+
+// Generate room code without ambiguous characters
+const generateRoomCode = () => {
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += ROOM_CODE_CHARS[Math.floor(Math.random() * ROOM_CODE_CHARS.length)];
+  }
+  return code;
+};
 
 // Generate deterministic avatar from username
 const hashCode = (str) => {
@@ -19,7 +31,7 @@ const getAvatarFromName = (name) => {
 };
 
 export const createRoom = async (hostName) => {
-  const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
+  const roomCode = generateRoomCode();
   const roomRef = ref(db, `rooms/${roomCode}`);
   
   const newRoom = {
@@ -149,4 +161,19 @@ export const drawCard = async (roomCode) => {
   }
 
   await update(roomRef, updates);
+};
+
+export const leaveRoom = async (roomCode, playerId) => {
+  const playerRef = ref(db, `rooms/${roomCode}/players/${playerId}`);
+  await remove(playerRef);
+  
+  // Check if room is empty
+  const roomRef = ref(db, `rooms/${roomCode}`);
+  const snapshot = await get(roomRef);
+  const room = snapshot.val();
+  
+  if (room && Object.keys(room.players || {}).length === 0) {
+    // Delete empty room
+    await remove(roomRef);
+  }
 };

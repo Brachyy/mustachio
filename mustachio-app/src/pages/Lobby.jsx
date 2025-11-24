@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { subscribeToRoom, startGame } from '../services/roomService';
+import { subscribeToRoom, startGame, leaveRoom } from '../services/roomService';
 import Game from './Game';
 import './Lobby.css';
-import { Copy, Users, Play, ArrowLeft } from 'lucide-react';
+import { Copy, Users, Play, ArrowLeft, LogOut } from 'lucide-react';
 import { useToast } from '../components/Toast';
 
 const Lobby = () => {
@@ -34,6 +34,18 @@ const Lobby = () => {
     toast.success('Code copié !');
   };
 
+  const handleLeave = async () => {
+    if (window.confirm('Voulez-vous vraiment quitter la partie ?')) {
+      try {
+        await leaveRoom(roomCode, playerId);
+        toast.info('Vous avez quitté la partie');
+        navigate('/');
+      } catch (error) {
+        toast.error('Erreur lors de la déconnexion');
+      }
+    }
+  };
+
   if (!room) return <div className="loading">Chargement...</div>;
 
   if (room.status === 'playing') {
@@ -46,8 +58,8 @@ const Lobby = () => {
   return (
     <div className="lobby-container">
       <div className="lobby-header">
-        <button className="btn-icon" onClick={() => navigate('/')}>
-          <ArrowLeft size={24} />
+        <button className="btn-icon" onClick={handleLeave} title="Quitter la partie">
+          <LogOut size={24} />
         </button>
         <h2>Salle d'attente</h2>
         <div className="room-code-display" onClick={copyCode}>
