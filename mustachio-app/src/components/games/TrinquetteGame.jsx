@@ -20,6 +20,9 @@ const TrinquetteGame = ({ room, isMyTurn, onNext, playerId }) => {
       
       if (room.miniGameState.dice) {
         setDice(room.miniGameState.dice);
+      } else {
+        // Reset dice when null (after OK click)
+        setDice({ d1: 1, d2: 1 });
       }
       
       if (room.miniGameState.announcedScore) setAnnouncedScore(room.miniGameState.announcedScore);
