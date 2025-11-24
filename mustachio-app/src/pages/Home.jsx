@@ -26,8 +26,7 @@ const Home = () => {
 
   const handleJoinGame = () => {
     if (!username) return alert('Veuillez entrer un pseudo');
-    // Pass username to Join page if needed, or just navigate
-    navigate('/join');
+    navigate('/join', { state: { username } });
   };
 
   return (

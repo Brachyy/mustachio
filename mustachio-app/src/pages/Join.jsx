@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { joinRoom } from '../services/roomService';
 import './Home.css'; // Reuse Home styles
 
 const Join = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState('');
+  const location = useLocation();
+  const [username, setUsername] = useState(location.state?.username || '');
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState('');
 
@@ -30,14 +31,24 @@ const Join = () => {
       </div>
       
       <div className="input-container">
-        <input
-          type="text"
-          placeholder="Ton pseudo"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="username-input"
-          style={{ marginBottom: '10px' }}
-        />
+        {location.state?.username ? (
+          <div className="username-input" style={{ 
+            marginBottom: '10px', 
+            background: 'rgba(255, 255, 255, 0.15)',
+            cursor: 'default'
+          }}>
+            {username}
+          </div>
+        ) : (
+          <input
+            type="text"
+            placeholder="Ton pseudo"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="username-input"
+            style={{ marginBottom: '10px' }}
+          />
+        )}
         <input
           type="text"
           placeholder="Code de la salle"
