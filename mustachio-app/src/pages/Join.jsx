@@ -37,24 +37,14 @@ const Join = () => {
       </div>
       
       <div className="input-container">
-        {location.state?.username ? (
-          <div className="username-input" style={{ 
-            marginBottom: '10px', 
-            background: 'rgba(255, 255, 255, 0.15)',
-            cursor: 'default'
-          }}>
-            {username}
-          </div>
-        ) : (
-          <input
-            type="text"
-            placeholder="Ton pseudo"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            className="username-input"
-            style={{ marginBottom: '10px' }}
-          />
-        )}
+        <input
+          type="text"
+          placeholder="Ton pseudo"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          className="username-input"
+          style={{ marginBottom: '10px' }}
+        />
         <input
           type="text"
           placeholder="Code de la salle"
