@@ -292,9 +292,11 @@
 
 .tap-hint {
   position: absolute;
-  bottom: -120px; /* Move it WAY down */
-  width: 200%;
-  left: -50%;
+  top: 120%; /* Position below the card relative to card height */
+  bottom: auto;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
   text-align: center;
   font-weight: 800;
   animation: bounce 1s infinite;
@@ -303,6 +305,7 @@
   text-shadow: 0 2px 4px rgba(0,0,0,0.8);
   color: var(--primary);
   pointer-events: none;
+  z-index: 50;
 }
 
 @keyframes pulseGlow {
