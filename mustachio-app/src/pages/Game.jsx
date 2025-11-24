@@ -305,7 +305,7 @@ const Game = ({ room, playerId }) => {
           )}
           {room.mustachio && (
             <div className="status-badge mustachio-badge">
-              <span className="status-icon">🥸</span>
+              <span className="status-icon">🔫</span>
               <span className="status-text">{room.players[room.mustachio]?.name}</span>
             </div>
           )}
