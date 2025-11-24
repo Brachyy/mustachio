@@ -202,11 +202,17 @@ const Game = ({ room, playerId }) => {
             <img src="/assets/avatar.png" alt="Avatar" />
           </div>
           <span>{isMyTurn ? "C'est à toi !" : `Tour de ${activePlayer.name}`}</span>
+          {viewState === 'minigame' && activeCard && (
+            <div className="header-card-display">
+              <span className="card-value">{activeCard.value}</span>
+              <span className="card-suit">{activeCard.suit}</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Game Status Bar (Lovers & Mustachio) */}
-      {(room.lovers || room.mustachio) && (
+      {/* Game Status Bar (Lovers & Mustachio) - Hide during minigame */}
+      {(room.lovers || room.mustachio) && viewState !== 'minigame' && (
         <div className="game-status-bar glass-panel">
           {room.lovers && (
             <div className="status-item lovers">
@@ -241,10 +247,6 @@ const Game = ({ room, playerId }) => {
       <div className="game-board">
         {viewState === 'minigame' && activeCard ? (
           <div className="active-game-wrapper">
-            <div className="card-display-small">
-              <span className="card-value">{activeCard.value}</span>
-              <span className="card-suit">{activeCard.suit}</span>
-            </div>
             <MiniGameRouter 
               cardValue={activeCard.value} 
               room={room} 
@@ -275,9 +277,10 @@ const Game = ({ room, playerId }) => {
               <div className="card-placeholder-slot"></div>
               
               {/* If we are revealed, show the card sitting here */}
-              {viewState === 'revealed' && animatingCard && (
+              {/* If we are revealed, show the card sitting here */}
+              {activeCard && viewState !== 'animating' && (
                 <div className="landed-card">
-                  {renderCardFace(animatingCard)}
+                  {renderCardFace(activeCard)}
                 </div>
               )}
             </div>
