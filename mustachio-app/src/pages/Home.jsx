@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
-
 import { createRoom } from '../services/roomService';
+import { useToast } from '../components/Toast';
 
 const Home = () => {
   const navigate = useNavigate();
+  const toast = useToast();
   const [username, setUsername] = useState('');
   const [isCreating, setIsCreating] = useState(false);
 
   const handleCreateGame = async () => {
-    if (!username) return alert('Veuillez entrer un pseudo');
+    if (!username) {
+      toast.warning('Veuillez entrer un pseudo');
+      return;
+    }
     
     setIsCreating(true);
     try {
@@ -18,14 +22,17 @@ const Home = () => {
       navigate(`/lobby/${roomCode}`, { state: { playerId } });
     } catch (error) {
       console.error(error);
-      alert(`Erreur lors de la création de la partie: ${error.message}`);
+      toast.error(`Erreur lors de la création de la partie: ${error.message}`);
     } finally {
       setIsCreating(false);
     }
   };
 
   const handleJoinGame = () => {
-    if (!username) return alert('Veuillez entrer un pseudo');
+    if (!username) {
+      toast.warning('Veuillez entrer un pseudo');
+      return;
+    }
     navigate('/join', { state: { username } });
   };
 

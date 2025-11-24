@@ -1,0 +1,159 @@
+.endgame-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  width: 100%;
+  padding: clamp(20px, 5vh, 40px) clamp(15px, 5vw, 30px);
+  box-sizing: border-box;
+}
+
+.endgame-content {
+  max-width: min(90vw, 600px);
+  width: 100%;
+  padding: clamp(30px, 6vh, 50px) clamp(20px, 5vw, 40px);
+  text-align: center;
+  animation: fadeInScale 0.5s ease-out;
+}
+
+.trophy-icon {
+  color: var(--primary);
+  margin-bottom: clamp(20px, 4vh, 30px);
+  animation: bounce 2s infinite;
+}
+
+.trophy-icon svg {
+  width: clamp(60px, 15vw, 100px);
+  height: clamp(60px, 15vw, 100px);
+  filter: drop-shadow(0 0 20px var(--primary-glow));
+}
+
+.endgame-title {
+  font-size: clamp(2rem, 8vw, 3rem);
+  margin-bottom: clamp(15px, 3vh, 25px);
+  background: linear-gradient(135deg, var(--primary) 0%, #e8b923 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.endgame-message {
+  margin-bottom: clamp(30px, 6vh, 50px);
+}
+
+.endgame-message p {
+  font-size: clamp(1rem, 4vw, 1.2rem);
+  margin: clamp(8px, 2vh, 12px) 0;
+}
+
+.endgame-message .subtitle {
+  color: var(--text-dim);
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+}
+
+.players-summary {
+  margin-bottom: clamp(30px, 6vh, 40px);
+}
+
+.players-summary h3 {
+  font-size: clamp(1.2rem, 5vw, 1.5rem);
+  margin-bottom: clamp(15px, 3vh, 20px);
+  color: var(--primary);
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2vh, 15px);
+  max-height: 40vh;
+  overflow-y: auto;
+  padding: clamp(10px, 2vh, 15px);
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+}
+
+.player-item {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2.5vw, 15px);
+  padding: clamp(8px, 2vw, 12px);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+}
+
+.player-avatar-small {
+  width: clamp(35px, 10vw, 50px);
+  height: clamp(35px, 10vw, 50px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.2rem, 5vw, 1.8rem);
+  flex-shrink: 0;
+}
+
+.player-name {
+  flex: 1;
+  text-align: left;
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+  font-weight: 600;
+}
+
+.host-badge-small {
+  background: var(--primary);
+  color: #1a1a2e;
+  padding: clamp(4px, 1vw, 6px) clamp(8px, 2vw, 12px);
+  border-radius: 6px;
+  font-size: clamp(0.7rem, 3vw, 0.85rem);
+  font-weight: 700;
+}
+
+.endgame-btn {
+  width: 100%;
+  max-width: min(80vw, 300px);
+  padding: clamp(14px, 3.5vw, 18px);
+  font-size: clamp(1rem, 4vw, 1.2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+/* Scrollbar styling */
+.players-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.players-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.players-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.players-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

@@ -4,11 +4,13 @@ import { subscribeToRoom, startGame } from '../services/roomService';
 import Game from './Game';
 import './Lobby.css';
 import { Copy, Users, Play, ArrowLeft } from 'lucide-react';
+import { useToast } from '../components/Toast';
 
 const Lobby = () => {
   const { roomCode } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToast();
   const [room, setRoom] = useState(null);
   const [playerId, setPlayerId] = useState(location.state?.playerId);
 
@@ -19,17 +21,17 @@ const Lobby = () => {
       if (data) {
         setRoom(data);
       } else {
-        alert("La salle a été fermée");
+        toast.error("La salle a été fermée");
         navigate('/');
       }
     });
 
     return () => unsubscribe();
-  }, [roomCode, navigate]);
+  }, [roomCode, navigate, toast]);
 
   const copyCode = () => {
     navigator.clipboard.writeText(roomCode);
-    alert('Code copié !');
+    toast.success('Code copié !');
   };
 
   if (!room) return <div className="loading">Chargement...</div>;

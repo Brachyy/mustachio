@@ -1,14 +1,31 @@
 import { db } from '../firebase';
 import { ref, set, get, update, onValue, push, child } from 'firebase/database';
 
+const MAX_PLAYERS = 10;
+
+// Generate deterministic avatar from username
+const hashCode = (str) => {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    const char = str.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash;
+  }
+  return Math.abs(hash);
+};
+
+const getAvatarFromName = (name) => {
+  return hashCode(name) % 20;
+};
+
 export const createRoom = async (hostName) => {
   const roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
   const roomRef = ref(db, `rooms/${roomCode}`);
   
   const newRoom = {
     code: roomCode,
-    hostId: 'host', // In a real app with Auth, this would be the UID
-    name: `${hostName}'s Table`, // Added to satisfy validation rules
+    hostId: 'host',
+    name: `${hostName}'s Table`,
     status: 'waiting',
     createdAt: Date.now(),
     players: {
@@ -16,7 +33,7 @@ export const createRoom = async (hostName) => {
         id: 'host',
         name: hostName,
         isHost: true,
-        avatar: Math.floor(Math.random() * 20) // Random avatar index
+        avatar: getAvatarFromName(hostName)
       }
     }
   };
@@ -38,14 +55,20 @@ export const joinRoom = async (roomCode, playerName) => {
     throw new Error("La partie a déjà commencé");
   }
 
-  const playerId = push(child(ref(db), 'players')).key; // Generate unique ID
+  // Check player limit
+  const currentPlayerCount = Object.keys(roomData.players || {}).length;
+  if (currentPlayerCount >= MAX_PLAYERS) {
+    throw new Error(`La salle est pleine (maximum ${MAX_PLAYERS} joueurs)`);
+  }
+
+  const playerId = push(child(ref(db), 'players')).key;
   const playerRef = ref(db, `rooms/${roomCode}/players/${playerId}`);
 
   await set(playerRef, {
     id: playerId,
     name: playerName,
     isHost: false,
-    avatar: Math.floor(Math.random() * 20)
+    avatar: getAvatarFromName(playerName)
   });
 
   return { roomCode, playerId };
@@ -100,6 +123,13 @@ export const drawCard = async (roomCode) => {
   const room = snapshot.val();
 
   if (!room.deck || room.deck.length === 0) {
+    // End game when deck is empty
+    await update(roomRef, {
+      status: 'finished',
+      activeCard: null,
+      miniGameState: null,
+      endedAt: Date.now()
+    });
     return;
   }
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { drawCard } from '../services/roomService';
 import MiniGameRouter from '../components/MiniGameRouter';
+import EndGame from '../components/EndGame';
 import { soundService } from '../services/soundService';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
@@ -101,6 +102,11 @@ const Game = ({ room, playerId }) => {
       </div>
     </div>
   );
+
+  // Show end game screen if game is finished
+  if (room.status === 'finished') {
+    return <EndGame room={room} />;
+  }
 
   return (
     <div className="game-container">

@@ -1,21 +1,22 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
-import Lobby from './pages/Lobby';
 import Join from './pages/Join';
+import Lobby from './pages/Lobby';
+import { ToastProvider } from './components/Toast';
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <div className="app-container">
-        <div className="mustache-bg"></div>
+    <ToastProvider>
+      <Router>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/join" element={<Join />} />
           <Route path="/lobby/:roomCode" element={<Lobby />} />
         </Routes>
-      </div>
-    </Router>
+      </Router>
+    </ToastProvider>
   );
 }
 
