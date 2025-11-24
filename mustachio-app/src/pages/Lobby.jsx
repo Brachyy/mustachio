@@ -5,6 +5,8 @@ import Game from './Game';
 import './Lobby.css';
 import { Copy, Users, Play, ArrowLeft, LogOut } from 'lucide-react';
 import { useToast } from '../components/Toast';
+import Loader from '../components/Loader';
+import { soundService } from '../services/soundService';
 
 const Lobby = () => {
   const { roomCode } = useParams();
@@ -27,7 +29,31 @@ const Lobby = () => {
     });
 
     return () => unsubscribe();
+    return () => unsubscribe();
   }, [roomCode, navigate, toast]);
+
+  // Play sound when players join/leave
+  useEffect(() => {
+    if (room?.players) {
+      const currentCount = Object.keys(room.players).length;
+      // We could store previous count in a ref to detect join vs leave
+      // For now, let's just play join sound if we are not the first one (handled by initial load)
+      // Actually, better to use a ref to track previous count
+    }
+  }, [room?.players]);
+
+  const prevPlayerCountRef = React.useRef(0);
+  useEffect(() => {
+    if (room?.players) {
+      const count = Object.keys(room.players).length;
+      if (prevPlayerCountRef.current > 0 && count > prevPlayerCountRef.current) {
+        soundService.playJoin();
+      } else if (prevPlayerCountRef.current > 0 && count < prevPlayerCountRef.current) {
+        soundService.playLeave();
+      }
+      prevPlayerCountRef.current = count;
+    }
+  }, [room?.players]);
 
   const copyCode = () => {
     navigator.clipboard.writeText(roomCode);
@@ -46,7 +72,7 @@ const Lobby = () => {
     }
   };
 
-  if (!room) return <div className="loading">Chargement...</div>;
+  if (!room) return <Loader text="Chargement du salon..." fullScreen />;
 
   if (room.status === 'playing') {
     return <Game room={room} playerId={playerId} />;

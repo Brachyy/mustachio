@@ -59,6 +59,37 @@ class SoundService {
     this.playTone(880, 'sine', 0.4, 0.1);
     setTimeout(() => this.playTone(1760, 'square', 0.2, 0.05), 100);
   }
+
+  playCardReveal() {
+    // Magic dust sound
+    this.playTone(600, 'sine', 0.1, 0.05);
+    setTimeout(() => this.playTone(800, 'sine', 0.1, 0.05), 50);
+    setTimeout(() => this.playTone(1200, 'sine', 0.2, 0.05), 100);
+  }
+
+  playJoin() {
+    // Happy doorbell
+    this.playTone(523.25, 'sine', 0.1, 0.1); // C5
+    setTimeout(() => this.playTone(659.25, 'sine', 0.2, 0.1), 150); // E5
+  }
+
+  playLeave() {
+    // Door closing / low tone
+    this.playTone(300, 'sawtooth', 0.2, 0.1);
+    setTimeout(() => this.playTone(200, 'sawtooth', 0.3, 0.1), 100);
+  }
+
+  playError() {
+    // Error buzz
+    this.playTone(150, 'sawtooth', 0.3, 0.2);
+  }
+  
+  stopAll() {
+    // Web Audio API doesn't easily support "stop all" without tracking nodes, 
+    // but we can close/suspend context if really needed, or just do nothing for now 
+    // as our tones are short-lived.
+    // For a more robust system, we'd track active oscillators.
+  }
 }
 
 export const soundService = new SoundService();

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { joinRoom } from '../services/roomService';
+import Loader from '../components/Loader';
 import './Home.css'; // Reuse Home styles
 
 const Join = () => {
@@ -9,6 +10,7 @@ const Join = () => {
   const [username, setUsername] = useState(location.state?.username || '');
   const [roomCode, setRoomCode] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleJoin = async () => {
     if (!username || !roomCode) {
@@ -16,13 +18,17 @@ const Join = () => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const { playerId } = await joinRoom(roomCode.toUpperCase(), username);
       navigate(`/lobby/${roomCode.toUpperCase()}`, { state: { playerId } });
     } catch (err) {
       setError(err.message);
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) return <Loader text="Recherche de la salle..." fullScreen />;
 
   return (
     <div className="home-container">

@@ -1,11 +1,16 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Trophy, Home } from 'lucide-react';
+import { soundService } from '../services/soundService';
 import './EndGame.css';
 
 const EndGame = ({ room }) => {
   const navigate = useNavigate();
   const players = Object.values(room.players || {});
+
+  React.useEffect(() => {
+    soundService.playWin();
+  }, []);
 
   return (
     <div className="endgame-container">
