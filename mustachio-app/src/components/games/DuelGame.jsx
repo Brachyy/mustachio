@@ -78,15 +78,20 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
     return (
       <div className="opponent-selection">
         <h3>Choisis ton adversaire !</h3>
-        <div className="opponents-grid">
+        <div className="opponents-list">
           {room.order.map(pid => {
             if (pid === playerId) return null;
             const p = room.players[pid];
             return (
-              <button key={pid} className="btn opponent-btn" onClick={() => handleSelectOpponent(pid)}>
-                <div className="mini-avatar" style={{ backgroundColor: `hsl(${p.avatar * 18}, 70%, 50%)` }}>
-                  {p.name[0]}
-                </div>
+              <button 
+                key={pid} 
+                className="btn opponent-btn" 
+                style={{ 
+                  backgroundColor: `hsl(${p.avatar * 18}, 70%, 50%)`,
+                  color: 'white'
+                }}
+                onClick={() => handleSelectOpponent(pid)}
+              >
                 {p.name}
               </button>
             );

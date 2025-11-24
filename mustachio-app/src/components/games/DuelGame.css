@@ -6,20 +6,32 @@
   color: white;
 }
 
-.opponents-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+.opponents-list {
+  display: flex;
+  flex-direction: column;
   gap: 10px;
   margin-top: 20px;
+  max-height: 300px;
+  overflow-y: auto;
+  width: 100%;
+  max-width: 300px;
+  padding: 10px;
 }
 
 .opponent-btn {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  background: rgba(255,255,255,0.1);
-  padding: 10px;
+  width: 100%;
+  padding: 15px 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.opponent-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .dice {
