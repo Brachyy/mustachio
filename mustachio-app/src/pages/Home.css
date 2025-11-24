@@ -4,26 +4,26 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: var(--spacing-md);
-  position: relative;
-  z-index: 1;
+  width: 100%;
+  padding: clamp(20px, 5vh, 40px) clamp(15px, 5vw, 30px);
+  box-sizing: border-box;
 }
 
 .logo-container {
   text-align: center;
-  margin-bottom: var(--spacing-xl);
+  margin-bottom: clamp(30px, 5vh, 60px);
   animation: float 6s ease-in-out infinite;
 }
 
 .logo {
-  width: min(200px, 50vw);
+  width: clamp(80px, 20vw, 200px);
   height: auto;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: clamp(10px, 2vh, 20px);
   filter: drop-shadow(0 0 20px rgba(241, 196, 15, 0.3));
 }
 
 h1 {
-  font-size: clamp(2.5rem, 8vw, 4rem);
+  font-size: clamp(2rem, 10vw, 4rem);
   color: white;
   margin: 0;
   font-weight: 800;
@@ -33,27 +33,28 @@ h1 {
 
 .subtitle {
   color: var(--text-dim);
-  font-size: 1.1rem;
-  margin-top: var(--spacing-xs);
+  font-size: clamp(0.9rem, 3.5vw, 1.1rem);
+  margin-top: clamp(5px, 1vh, 10px);
 }
 
 .input-container {
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: clamp(20px, 4vh, 40px);
   width: 100%;
-  max-width: 320px;
+  max-width: min(90vw, 400px);
 }
 
 .username-input {
   width: 100%;
-  padding: 16px;
+  padding: clamp(14px, 3.5vw, 18px);
   border-radius: 16px;
   border: 2px solid var(--glass-border);
   background: rgba(255, 255, 255, 0.05);
   color: white;
-  font-size: 1.2rem;
+  font-size: clamp(16px, 4vw, 20px);
   text-align: center;
   transition: var(--transition-normal);
   backdrop-filter: blur(5px);
+  box-sizing: border-box;
 }
 
 .username-input:focus {
@@ -70,23 +71,52 @@ h1 {
 .actions-container {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-md);
+  gap: clamp(12px, 3vw, 20px);
   width: 100%;
-  max-width: 320px;
+  max-width: min(90vw, 400px);
 }
 
-.btn {
+.actions-container .btn {
   width: 100%;
-  padding: 18px;
-  font-size: 1.1rem;
+  padding: clamp(16px, 4vw, 20px);
+  font-size: clamp(1rem, 4vw, 1.2rem);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  box-sizing: border-box;
+  min-height: 50px;
 }
 
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-15px); }
   100% { transform: translateY(0px); }
+}
+
+/* Landscape mode */
+@media (orientation: landscape) and (max-height: 600px) {
+  .home-container {
+    padding: 2vh 5vw;
+  }
+  
+  .logo-container {
+    margin-bottom: 2vh;
+  }
+  
+  .logo {
+    width: clamp(60px, 15vh, 120px);
+  }
+  
+  h1 {
+    font-size: clamp(1.5rem, 8vh, 2.5rem);
+  }
+  
+  .input-container {
+    margin-bottom: 2vh;
+  }
+  
+  .actions-container {
+    gap: 10px;
+  }
 }
