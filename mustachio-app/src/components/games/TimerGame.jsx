@@ -8,11 +8,17 @@ const TimerGame = ({ room, isMyTurn, onNext, playerId }) => {
   const [timeLeft, setTimeLeft] = useState(3000);
   const [gameState, setGameState] = useState('waiting'); // waiting, running, finished
 
-  // Identify previous player (the judge)
+  // Identify previous player (the judge who gives theme)
   const currentIndex = room.currentTurnIndex;
   const previousIndex = (currentIndex - 1 + room.order.length) % room.order.length;
   const previousPlayerId = room.order[previousIndex];
+  const previousPlayerName = room.players[previousPlayerId]?.name || 'Joueur précédent';
+  const currentPlayerName = room.players[room.order[currentIndex]]?.name || 'Joueur actuel';
   const isJudge = playerId === previousPlayerId;
+  const isGuesser = isMyTurn;
+  
+  // Calculate progress percentage (0-100)
+  const progress = (timeLeft / 3000) * 100;
 
   // Sync with room state
   useEffect(() => {
@@ -65,14 +71,47 @@ const TimerGame = ({ room, isMyTurn, onNext, playerId }) => {
     <div className="timer-game-container">
       <h2 className="game-title">Le 3-3-3</h2>
       
-      <div className="timer-display">
-        {(timeLeft / 1000).toFixed(2)}s
+      {/* Role Instructions */}
+      <div className="role-info">
+        {isJudge ? (
+          <p className="role-instruction judge">🎯 <strong>Tu donnes le thème</strong> et tu lances le chrono</p>
+        ) : isGuesser ? (
+          <p className="role-instruction guesser">⏱️ <strong>{previousPlayerName}</strong> te donne le thème. Tu dois citer 3 choses !</p>
+        ) : (
+          <p className="role-instruction spectator">👀 <strong>{previousPlayerName}</strong> donne le thème à <strong>{currentPlayerName}</strong></p>
+        )}
       </div>
 
-      <div className="instructions">
-        {isMyTurn && <p>Cite 3 choses sur le thème donné !</p>}
-        {isJudge && <p>Donne un thème et lance le chrono !</p>}
-        {!isMyTurn && !isJudge && <p>Regarde le stress monter...</p>}
+      {/* Circular Timer */}
+      <div className="circular-timer">
+        <svg className="timer-svg" viewBox="0 0 200 200">
+          {/* Background circle */}
+          <circle
+            cx="100"
+            cy="100"
+            r="90"
+            fill="none"
+            stroke="rgba(255,255,255,0.1)"
+            strokeWidth="10"
+          />
+          {/* Progress circle */}
+          <circle
+            cx="100"
+            cy="100"
+            r="90"
+            fill="none"
+            stroke={progress > 33 ? "#f1c40f" : "#e74c3c"}
+            strokeWidth="10"
+            strokeDasharray={`${2 * Math.PI * 90}`}
+            strokeDashoffset={`${2 * Math.PI * 90 * (1 - progress / 100)}`}
+            strokeLinecap="round"
+            transform="rotate(-90 100 100)"
+            className="progress-ring"
+          />
+        </svg>
+        <div className="timer-text">
+          {(timeLeft / 1000).toFixed(2)}
+        </div>
       </div>
 
       <div className="controls">

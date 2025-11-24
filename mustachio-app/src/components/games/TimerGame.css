@@ -6,18 +6,69 @@
   width: 100%;
 }
 
-.timer-display {
-  font-size: 5rem;
-  font-weight: 800;
-  font-family: monospace;
-  color: #e74c3c;
-  text-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+/* Role Instructions */
+.role-info {
+  width: 100%;
+  max-width: 500px;
+  margin: 10px 0;
 }
 
-.instructions {
-  font-size: 1.2rem;
+.role-instruction {
+  font-size: 1.1rem;
   text-align: center;
+  padding: 12px 20px;
+  border-radius: 12px;
+  margin: 0;
+  font-weight: 500;
+}
+
+.role-instruction.judge {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(41, 128, 185, 0.3));
+  border: 2px solid #3498db;
   color: #ecf0f1;
+}
+
+.role-instruction.guesser {
+  background: linear-gradient(135deg, rgba(241, 196, 15, 0.3), rgba(243, 156, 18, 0.3));
+  border: 2px solid #f1c40f;
+  color: #ecf0f1;
+}
+
+.role-instruction.spectator {
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #bdc3c7;
+}
+
+/* Circular Timer */
+.circular-timer {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 20px 0;
+}
+
+.timer-svg {
+  width: 100%;
+  height: 100%;
+  transform: scaleX(-1); /* Flip horizontally to make it go clockwise */
+}
+
+.progress-ring {
+  transition: stroke-dashoffset 0.1s linear, stroke 0.3s ease;
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3.5rem;
+  font-weight: 900;
+  font-family: 'Courier New', monospace;
+  color: #f1c40f;
+  text-shadow: 0 0 20px rgba(241, 196, 15, 0.6);
+  pointer-events: none;
 }
 
 .controls {
