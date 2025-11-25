@@ -44,26 +44,18 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
 
   // Derived key for penalty to ensure stability
   const penaltyKey = activePenaltyCard ? `${activePenaltyCard.suit}-${activePenaltyCard.value}` : null;
-  const penaltyStartTime = room.miniGameState?.penaltyStartTime || 0;
 
   // Effect 1: Handle Penalty Logic
   useEffect(() => {
-    if (step === 'racing' && isMyTurn && penaltyKey) {
-      const now = Date.now();
-      const elapsed = now - penaltyStartTime;
-      const remaining = Math.max(0, 4000 - elapsed);
-
+    if (step === 'racing' && isMyTurn && penaltyKey && activePenaltyCard) {
+      // Wait 4 seconds then clear the penalty and apply movement
       const timer = setTimeout(async () => {
-        if (!activePenaltyCard) return;
-
         const penaltySuit = activePenaltyCard.suit;
-        // Use ref to get latest positions
         const currentPos = positionsRef.current[penaltySuit]; 
         const newPos = Math.max(0, currentPos - 1);
         
         const updates = {
           activePenaltyCard: null,
-          penaltyStartTime: null,
           [`positions/${penaltySuit}`]: newPos
         };
         
@@ -72,11 +64,11 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
         } catch (err) {
           console.error("Failed to clear penalty:", err);
         }
-      }, remaining);
+      }, 4000);
 
       return () => clearTimeout(timer);
     }
-  }, [penaltyKey, penaltyStartTime, step, isMyTurn, room.code]);
+  }, [penaltyKey, step, isMyTurn, room.code]);
 
   // Effect 2: Handle Drawing Logic
   useEffect(() => {
@@ -110,7 +102,6 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
     
     const updates = {
       activePenaltyCard: null,
-      penaltyStartTime: null,
       [`positions/${penaltySuit}`]: newPos
     };
     
@@ -153,8 +144,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       winner: null,
       penaltyCards: penalties,
       revealedMilestones: [],
-      activePenaltyCard: null,
-      penaltyStartTime: 0
+      activePenaltyCard: null
     });
   };
 
@@ -200,7 +190,6 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
 
     if (penaltyTriggered) {
       updates.activePenaltyCard = penaltyTriggered;
-      updates.penaltyStartTime = Date.now();
     }
 
     if (newWinner) {
