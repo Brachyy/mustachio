@@ -15,17 +15,18 @@
 }
 
 .purple-card {
-  width: 60px;
-  height: 90px;
+  width: var(--card-width);
+  height: var(--card-height);
   background: white;
-  border-radius: 5px;
+  border-radius: 12px;
   color: black;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 5px;
+  padding: 10px;
   font-weight: bold;
   animation: flipIn 0.5s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .purple-card.red {
@@ -39,13 +40,13 @@
 .card-corner {
   display: flex;
   flex-direction: column;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   line-height: 1;
 }
 
 .card-center {
   align-self: center;
-  font-size: 1.5rem;
+  font-size: 2.5rem;
 }
 
 .bottom-right {
@@ -53,14 +54,16 @@
 }
 
 .card-placeholder {
-  width: 60px;
-  height: 90px;
-  border: 2px dashed rgba(255,255,255,0.5);
-  border-radius: 5px;
+  width: var(--card-width);
+  height: var(--card-height);
+  border: 3px dashed rgba(255,255,255,0.3);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
+  font-size: 3rem;
+  background: rgba(255,255,255,0.05);
+  color: rgba(255,255,255,0.5);
 }
 
 .message-area {
