@@ -5,29 +5,64 @@ import { generateDeck } from '../../utils/deck';
 import './PurpleGame.css';
 
 const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
-  const [step, setStep] = useState(0); // 0: Color, 1: High/Low, 2: In/Out, 3: Suit, 4: Finished
-  const [cards, setCards] = useState([]); // Cards drawn so far
-  const [currentGuess, setCurrentGuess] = useState(null);
-  const [message, setMessage] = useState("");
+  const [currentPlayer, setCurrentPlayer] = useState(null);
+  const [playersDone, setPlayersDone] = useState([]);
 
   useEffect(() => {
-    if (room.miniGameState) {
+    if (!room.miniGameState) {
+      // Initialize game state if empty
+      if (isMyTurn) {
+        update(ref(db, `rooms/${room.code}/miniGameState`), {
+          step: 0,
+          cards: [],
+          currentPlayer: playerId,
+          playersDone: []
+        });
+      }
+    } else {
       setStep(room.miniGameState.step || 0);
       setCards(room.miniGameState.cards || []);
       if (room.miniGameState.message) setMessage(room.miniGameState.message);
+      setCurrentPlayer(room.miniGameState.currentPlayer || room.order[room.currentTurnIndex]);
+      setPlayersDone(room.miniGameState.playersDone || []);
     }
-  }, [room.miniGameState]);
+  }, [room.miniGameState, isMyTurn, room.code, playerId, room.order, room.currentTurnIndex]);
+
+  const isCurrentPlayer = playerId === currentPlayer;
+
+  const handleNextPlayer = async () => {
+    const currentIndex = room.order.indexOf(currentPlayer);
+    const nextIndex = (currentIndex + 1) % room.order.length;
+    const nextPlayerId = room.order[nextIndex];
+    
+    // Check if we've gone full circle
+    // Actually, simpler: keep track of who finished
+    const newPlayersDone = [...playersDone, currentPlayer];
+    
+    if (newPlayersDone.length >= room.order.length) {
+      // Everyone finished
+      onNext();
+    } else {
+      // Next player
+      await update(ref(db, `rooms/${room.code}/miniGameState`), {
+        step: 0,
+        cards: [],
+        currentPlayer: nextPlayerId,
+        playersDone: newPlayersDone,
+        message: "",
+        lastResult: null
+      });
+    }
+  };
 
   const handleGuess = async (guess) => {
-    if (!isMyTurn) return;
+    if (!isCurrentPlayer) return;
     
-    // Draw a random card for the game (separate from main deck to avoid messing up main game flow too much, 
-    // or we could use the main deck but that requires more service calls. Let's simulate a mini-deck).
+    // Draw a random card
     const newCard = generateDeck()[Math.floor(Math.random() * 52)];
     
     let won = false;
     const lastCard = cards.length > 0 ? cards[cards.length - 1] : null;
-    const firstCard = cards.length > 0 ? cards[0] : null;
 
     // Logic
     if (step === 0) { // Red/Black
@@ -36,7 +71,7 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
     } else if (step === 1) { // High/Low
       const val = getCardValue(newCard.value);
       const lastVal = getCardValue(lastCard.value);
-      won = (guess === 'more' && val > lastVal) || (guess === 'less' && val < lastVal) || (val === lastVal); // Tie = win usually? Or drink? Let's say win.
+      won = (guess === 'more' && val > lastVal) || (guess === 'less' && val < lastVal) || (val === lastVal);
     } else if (step === 2) { // Between/Outside
       const val = getCardValue(newCard.value);
       const v1 = getCardValue(cards[0].value);
@@ -97,16 +132,30 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
     } else {
       return (
         <div className="message lose">
-          {isMyTurn ? `Perdu ! Bois ${sips} gorgées.` : `Perdu ! ${player} boit ${sips} gorgées.`}
+          {isCurrentPlayer ? `Perdu ! Bois ${sips} gorgées.` : `Perdu ! ${player} boit ${sips} gorgées.`}
         </div>
       );
     }
+  };
+
+  const renderQuestion = () => {
+    if (step === 0) return "Rouge ou Noir ?";
+    if (step === 1) return `Plus ou Moins que ${cards[0]?.value} ?`;
+    if (step === 2) return `Entre ou à l'Extérieur de ${cards[0]?.value} et ${cards[1]?.value} ?`;
+    if (step === 3) return "Quelle couleur (signe) ?";
+    return "Tour terminé !";
   };
 
   return (
     <div className="purple-game-container glass-card">
       <h2 className="game-title">Purple</h2>
       
+      {currentPlayer && room.players[currentPlayer] && (
+        <div className="current-player-indicator">
+          Tour de {room.players[currentPlayer].name}
+        </div>
+      )}
+
       <div className="cards-row">
         {cards.map((c, i) => renderCard(c, i))}
         {step < 4 && <div className="card-placeholder">?</div>}
@@ -114,33 +163,35 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
 
       <div className="message-area">{renderMessage()}</div>
 
-      {step === 0 && isMyTurn && (
+      {step < 4 && (
+        <div className="question-section">
+          <h3>{renderQuestion()}</h3>
+        </div>
+      )}
+
+      {step === 0 && isCurrentPlayer && (
         <div className="controls">
-          <p>Rouge ou Noir ?</p>
           <button className="btn btn-danger" onClick={() => handleGuess('red')}>Rouge</button>
           <button className="btn btn-dark" onClick={() => handleGuess('black')}>Noir</button>
         </div>
       )}
 
-      {step === 1 && isMyTurn && (
+      {step === 1 && isCurrentPlayer && (
         <div className="controls">
-          <p>Plus ou Moins que {cards[0].value} ?</p>
           <button className="btn btn-primary" onClick={() => handleGuess('more')}>Plus (+)</button>
           <button className="btn btn-primary" onClick={() => handleGuess('less')}>Moins (-)</button>
         </div>
       )}
 
-      {step === 2 && isMyTurn && (
+      {step === 2 && isCurrentPlayer && (
         <div className="controls">
-          <p>Entre ou à l'Extérieur de {cards[0].value} et {cards[1].value} ?</p>
           <button className="btn btn-primary" onClick={() => handleGuess('in')}>Entre</button>
           <button className="btn btn-primary" onClick={() => handleGuess('out')}>Extérieur</button>
         </div>
       )}
 
-      {step === 3 && isMyTurn && (
+      {step === 3 && isCurrentPlayer && (
         <div className="controls">
-          <p>Quelle couleur (signe) ?</p>
           <div className="suit-buttons">
             <button className="btn btn-light" onClick={() => handleGuess('♥')}>♥</button>
             <button className="btn btn-light" onClick={() => handleGuess('♦')}>♦</button>
@@ -152,12 +203,23 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
 
       {step === 4 && (
         <div className="finished">
-          <p>Partie terminée !</p>
-          {isMyTurn && <button className="btn btn-secondary" onClick={onNext}>Suivant</button>}
+          <p>Tour de {room.players[currentPlayer]?.name} terminé !</p>
+          {isCurrentPlayer && (
+            <button className="btn btn-secondary" onClick={handleNextPlayer}>
+              {playersDone.length + 1 >= room.order.length ? "Terminer la partie" : "Joueur Suivant"}
+            </button>
+          )}
+          {!isCurrentPlayer && (
+            <div className="waiting-message">En attente de {room.players[currentPlayer]?.name}...</div>
+          )}
         </div>
       )}
       
-      {!isMyTurn && step < 4 && <p>Le Moustachu réfléchit...</p>}
+      {!isCurrentPlayer && step < 4 && (
+        <div className="waiting-message">
+          {room.players[currentPlayer]?.name} réfléchit...
+        </div>
+      )}
     </div>
   );
 };
