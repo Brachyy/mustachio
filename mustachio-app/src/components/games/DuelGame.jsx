@@ -92,7 +92,7 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
                 }}
                 onClick={() => handleSelectOpponent(pid)}
               >
-                {p.name}
+                {p?.name || '...'}
               </button>
             );
           })}
