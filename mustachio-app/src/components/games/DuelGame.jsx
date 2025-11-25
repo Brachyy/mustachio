@@ -31,7 +31,7 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
     
     await update(ref(db, `rooms/${room.code}/miniGameState/rolls/${playerId}`), {
       value: roll,
-      name: room.players[playerId].name
+      name: room.players[playerId]?.name || 'Joueur'
     });
   };
 
