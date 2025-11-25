@@ -47,10 +47,14 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
 
   // Effect 1: Handle Penalty Logic
   useEffect(() => {
-    if (step === 'racing' && isMyTurn && penaltyKey && activePenaltyCard) {
+    if (step === 'racing' && isMyTurn && penaltyKey) {
+      // Capture the penalty card at the moment the effect runs
+      const penaltyCardSnapshot = activePenaltyCard;
+      if (!penaltyCardSnapshot) return;
+
       // Wait 4 seconds then clear the penalty and apply movement
       const timer = setTimeout(async () => {
-        const penaltySuit = activePenaltyCard.suit;
+        const penaltySuit = penaltyCardSnapshot.suit;
         const currentPos = positionsRef.current[penaltySuit]; 
         const newPos = Math.max(0, currentPos - 1);
         
