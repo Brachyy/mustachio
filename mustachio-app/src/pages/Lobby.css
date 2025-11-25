@@ -112,6 +112,13 @@
   font-size: 2.5rem;
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
   border: 3px solid rgba(255,255,255,0.1);
+  overflow: hidden; /* Ensure image doesn't overflow */
+}
+
+.player-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .player-name {
@@ -200,6 +207,7 @@
   .header-left {
     width: 100%;
     justify-content: space-between; /* Spread buttons if multiple */
+    margin-bottom: 10px; /* Add spacing below buttons */
   }
 
   .room-code-display {
