@@ -13,10 +13,25 @@ export const generateDeck = () => {
 
 const shuffle = (array) => {
   const newArray = [...array];
-  for (let i = newArray.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+  
+  // Use crypto.getRandomValues for better randomness if available
+  const getRandomInt = (max) => {
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      const randomBuffer = new Uint32Array(1);
+      crypto.getRandomValues(randomBuffer);
+      return randomBuffer[0] % max;
+    }
+    return Math.floor(Math.random() * max);
+  };
+  
+  // Perform Fisher-Yates shuffle 3 times for better perceived randomness
+  for (let pass = 0; pass < 3; pass++) {
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = getRandomInt(i + 1);
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
   }
+  
   return newArray;
 };
 
