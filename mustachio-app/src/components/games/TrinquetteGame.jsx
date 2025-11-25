@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { update, ref } from 'firebase/database';
 import { db } from '../../firebase';
 import { soundService } from '../../services/soundService';
+import { endTurn } from '../../services/roomService';
 import Dice3D from '../Dice3D';
 import './TrinquetteGame.css';
 
@@ -111,6 +112,14 @@ const TrinquetteGame = ({ room, isMyTurn, onNext, playerId }) => {
     return `${val}`;
   };
 
+  const handleFinish = async () => {
+    try {
+      await endTurn(room.code);
+    } catch (error) {
+      console.error("Error finishing turn:", error);
+    }
+  };
+
   return (
     <div className="trinquette-container glass-card">
       <h2 className="game-title">Trinquette</h2>
@@ -183,7 +192,7 @@ const TrinquetteGame = ({ room, isMyTurn, onNext, playerId }) => {
                 <div className="countdown-timer">{countdown}</div>
               ) : (
                 room.miniGameState.deciderId === playerId && (
-                  <button className="btn btn-secondary" onClick={onNext}>Terminer</button>
+                  <button className="btn btn-secondary" onClick={handleFinish}>Terminer</button>
                 )
               )}
             </>

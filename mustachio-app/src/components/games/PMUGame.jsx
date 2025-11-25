@@ -317,7 +317,13 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
           <p className="lose-msg">Tu as perdu... Bois {myBetData.sips} gorgées.</p>
         )}
         
-        {isMyTurn && <button className="btn btn-secondary" onClick={onNext}>Terminer</button>}
+        {isMyTurn ? (
+          <button className="btn btn-secondary" onClick={onNext}>Terminer</button>
+        ) : (
+          <div className="waiting-message">
+            En attente de {room.players[room.currentTurn]?.name}...
+          </div>
+        )}
       </div>
     );
   };

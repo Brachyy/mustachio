@@ -80,12 +80,12 @@ const NoteGame = ({ room, isMyTurn, onNext, playerId }) => {
       winningNote: winner
     });
 
-    // Auto-transition to guessing after 2s (showing the note to voters)
+    // Auto-transition to guessing after 3s (showing the note to voters)
     setTimeout(async () => {
       await update(ref(db, `rooms/${room.code}/miniGameState`), {
         step: 'guessing'
       });
-    }, 2000);
+    }, 3000);
   };
 
   const handleGuess = async (guess) => {
@@ -97,6 +97,13 @@ const NoteGame = ({ room, isMyTurn, onNext, playerId }) => {
       step: 'finished',
       result: { correct, guess }
     });
+  };
+
+  const getVotesForNote = (n) => {
+    const votes = room.miniGameState?.votes || {};
+    return Object.entries(votes)
+      .filter(([_, v]) => v.note === n)
+      .map(([pid, _]) => room.players[pid]);
   };
 
   return (
@@ -119,15 +126,30 @@ const NoteGame = ({ room, isMyTurn, onNext, playerId }) => {
               <p className="instruction">Vote pour la note secrète (1-10) :</p>
               <div className="timer-bar" style={{ width: `${(timeLeft/8)*100}%` }}></div>
               <div className="note-grid">
-                {[1,2,3,4,5,6,7,8,9,10].map(n => (
-                  <button 
-                    key={n} 
-                    className={`btn note-btn ${myVote === n ? 'selected' : ''}`}
-                    onClick={() => handleVote(n)}
-                  >
-                    {n}
-                  </button>
-                ))}
+                {[1,2,3,4,5,6,7,8,9,10].map(n => {
+                  const voters = getVotesForNote(n);
+                  return (
+                    <button 
+                      key={n} 
+                      className={`btn note-btn ${myVote === n ? 'selected' : ''}`}
+                      onClick={() => handleVote(n)}
+                    >
+                      {n}
+                      {voters.length > 0 && (
+                        <div className="vote-indicators">
+                          {voters.map(p => (
+                            <div 
+                              key={p.id} 
+                              className="vote-dot" 
+                              style={{ backgroundColor: `hsl(${(p.avatar || 0) * 18}, 70%, 50%)` }}
+                              title={p.name}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}

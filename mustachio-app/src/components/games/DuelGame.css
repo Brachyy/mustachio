@@ -77,6 +77,14 @@
   margin-top: 20px;
 }
 
+.waiting-message {
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  opacity: 0.8;
+  animation: pulse 2s infinite;
+}
+
 @keyframes rollIn {
   from { transform: rotate(-180deg) scale(0); }
   to { transform: rotate(0) scale(1); }

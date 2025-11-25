@@ -356,3 +356,13 @@
     font-size: 2rem;
   }
 }
+
+.waiting-message {
+  text-align: center;
+  margin-top: 20px;
+  font-style: italic;
+  opacity: 0.8;
+  animation: pulse 2s infinite;
+  color: white;
+  font-weight: bold;
+}

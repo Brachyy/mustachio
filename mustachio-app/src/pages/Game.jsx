@@ -13,9 +13,9 @@ import '../components/GameLogoOverlay.css';
 const Game = ({ room, playerId }) => {
   const navigate = useNavigate();
   const toast = useToast();
-  const isMyTurn = room.order[room.currentTurnIndex] === playerId;
-  const activePlayerId = room.order[room.currentTurnIndex];
-  const activePlayer = room.players[activePlayerId];
+  const isMyTurn = room.order && room.order[room.currentTurnIndex] === playerId;
+  const activePlayerId = room.order ? room.order[room.currentTurnIndex] : null;
+  const activePlayer = (room.players && activePlayerId) ? room.players[activePlayerId] : null;
   const activeCard = room.activeCard;
   const deckCount = room.deck ? room.deck.length : 0;
 

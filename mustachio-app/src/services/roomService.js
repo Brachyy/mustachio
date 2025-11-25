@@ -34,15 +34,18 @@ export const createRoom = async (hostName) => {
   const roomCode = generateRoomCode();
   const roomRef = ref(db, `rooms/${roomCode}`);
   
+  // Generate a unique ID for the host
+  const hostId = push(child(ref(db), 'players')).key;
+  
   const newRoom = {
     code: roomCode,
-    hostId: 'host',
+    hostId: hostId,
     name: `${hostName}'s Table`,
     status: 'waiting',
     createdAt: Date.now(),
     players: {
-      host: {
-        id: 'host',
+      [hostId]: {
+        id: hostId,
         name: hostName,
         isHost: true,
         avatar: getAvatarFromName(hostName)
@@ -53,10 +56,10 @@ export const createRoom = async (hostName) => {
   await set(roomRef, newRoom);
   
   // Setup disconnect handler for host
-  const hostPlayerRef = ref(db, `rooms/${roomCode}/players/host`);
+  const hostPlayerRef = ref(db, `rooms/${roomCode}/players/${hostId}`);
   onDisconnect(hostPlayerRef).remove();
   
-  return { roomCode, playerId: 'host' };
+  return { roomCode, playerId: hostId };
 };
 
 export const joinRoom = async (roomCode, playerName) => {

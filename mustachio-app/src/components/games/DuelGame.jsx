@@ -153,9 +153,13 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
           )}
         </div>
 
-          {isMyTurn && (
+          {isMyTurn ? (
             <div className="next-button-container">
               <button className="btn btn-secondary" onClick={onNext}>Suivant</button>
+            </div>
+          ) : (
+            <div className="waiting-message">
+              En attente de {activeName}...
             </div>
           )}
       </div>
