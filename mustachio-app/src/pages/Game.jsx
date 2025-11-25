@@ -29,6 +29,16 @@ const Game = ({ room, playerId }) => {
   const drawPileRef = useRef(null);
   const discardPileRef = useRef(null);
 
+  // Ref to track the last card ID that was processed for animation
+  // Initialize with null to ensure even the first card on load is treated as "new" for animation purposes
+  // or initialize with current to avoid animation on refresh?
+  // Let's initialize with null to match the "new card" logic, but if we want to avoid animation on refresh we'd need more logic.
+  // For now, let's fix the glitch.
+  const lastProcessedCardId = useRef(null);
+
+  // Helper to get unique card ID
+  const getCardId = (c) => c ? `${c.value}-${c.suit}` : null;
+
   // Check if active player still exists (handle disconnection)
   useEffect(() => {
     if (!activePlayer && room.status === 'playing') {
@@ -60,6 +70,9 @@ const Game = ({ room, playerId }) => {
       // New card drawn!
       setAnimatingCard(activeCard);
       setViewState('animating');
+      
+      // Mark this card as processed so it can be shown in discard pile after animation
+      lastProcessedCardId.current = getCardId(activeCard);
 
       // Calculate positions
       if (drawPileRef.current && discardPileRef.current) {
@@ -102,6 +115,7 @@ const Game = ({ room, playerId }) => {
     } else if (!activeCard) {
       setViewState('idle');
       setAnimatingCard(null);
+      lastProcessedCardId.current = null;
     }
   }, [activeCard, viewState]); // Added viewState to dependencies to re-run when it changes
 
@@ -149,42 +163,8 @@ const Game = ({ room, playerId }) => {
     }
   }, [viewState]);
 
-
-  const handleDraw = async () => {
-    if (!isMyTurn || viewState !== 'idle') return;
-    try {
-      soundService.playDraw();
-      await drawCard(room.code);
-    } catch (error) {
-      console.error("Error drawing card:", error);
-    }
-  };
-
-  const handleLeave = async () => {
-    if (window.confirm('Voulez-vous vraiment quitter la partie ?')) {
-      try {
-        await leaveRoom(room.code, playerId);
-        toast.info('Vous avez quitté la partie');
-        navigate('/');
-      } catch (error) {
-        toast.error('Erreur lors de la déconnexion');
-      }
-    }
-  };
-
-  const renderCardFace = (card) => (
-    <div className={`card-face card-front ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`}>
-      <div className="card-corner top-left">
-        <span>{card.value}</span>
-        <span>{card.suit}</span>
-      </div>
-      <div className="card-center-suit">{card.suit}</div>
-      <div className="card-corner bottom-right">
-        <span>{card.value}</span>
-        <span>{card.suit}</span>
-      </div>
-    </div>
-  );
+  const currentCardId = getCardId(activeCard);
+  const isNewCardPendingAnimation = currentCardId !== lastProcessedCardId.current;
 
   // Show end game screen if game is finished
   if (room.status === 'finished') {
@@ -255,20 +235,15 @@ const Game = ({ room, playerId }) => {
               <div className="card-placeholder-slot"></div>
               
               {/* If we are revealed, show the card sitting here */}
-              {/* If we are revealed, show the card sitting here */}
-              {activeCard && viewState !== 'animating' && (
+              {activeCard && viewState !== 'animating' && !isNewCardPendingAnimation && (
                 <div className="landed-card">
                   {renderCardFace(activeCard)}
                 </div>
               )}
             </div>
-
-
           </div>
         )}
       </div>
-
-
 
       {/* ANIMATING CARD - Moved to root to avoid perspective/transform context issues */}
       {viewState === 'animating' && animatingCard && (

@@ -7,6 +7,9 @@ import './PurpleGame.css';
 const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [playersDone, setPlayersDone] = useState([]);
+  const [step, setStep] = useState(0);
+  const [cards, setCards] = useState([]);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     if (!room.miniGameState) {
