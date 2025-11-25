@@ -126,8 +126,8 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
     const res = room.miniGameState?.result;
     if (!res) return null;
 
-    const activeName = room.players[room.order[room.currentTurnIndex]].name;
-    const oppName = room.players[opponentId].name;
+    const activeName = room.players[room.order[room.currentTurnIndex]]?.name || 'Joueur 1';
+    const oppName = room.players[opponentId]?.name || 'Joueur 2';
 
     return (
       <div className="result-phase">
@@ -148,7 +148,7 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
             <p className="drink-msg">ÉGALITÉ ! Tout le monde boit {res.sips} gorgées !</p>
           ) : (
             <p className="drink-msg">
-              {room.players[res.loser].name} perd et boit {res.sips} gorgées !
+              {room.players[res.loser]?.name || 'Le perdant'} perd et boit {res.sips} gorgées !
             </p>
           )}
         </div>
