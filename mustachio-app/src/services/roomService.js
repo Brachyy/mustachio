@@ -157,7 +157,8 @@ export const drawCard = async (roomCode) => {
   }
 
   const newDeck = [...room.deck];
-  const card = newDeck.pop();
+  // DEBUG: Force Jack for PMU testing
+  const card = { suit: '♥', value: 'J', id: 'J♥' };
   
   const updates = {
     deck: newDeck,
