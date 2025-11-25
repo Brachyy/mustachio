@@ -93,6 +93,22 @@
   object-fit: contain;
 }
 
+.rule-card-badge {
+  background: white;
+  color: black;
+  width: 30px;
+  height: 45px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border: 2px solid var(--primary);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  font-family: 'Outfit', sans-serif;
+}
+
 .rule-title {
   flex: 1;
   font-size: 1.2rem;
