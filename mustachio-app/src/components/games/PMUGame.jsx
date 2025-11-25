@@ -88,6 +88,19 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
     }
   }, [step, isMyTurn, winner, activePenaltyCard, drawnCards.length]);
 
+  // Effect 3: Auto-start race when all bets are in
+  useEffect(() => {
+    if (step === 'betting' && isMyTurn) {
+      const bets = room.miniGameState?.bets || {};
+      const betCount = Object.keys(bets).length;
+      const totalPlayers = Object.keys(room.players).length;
+      
+      if (betCount >= totalPlayers) {
+        setTimeout(() => startRace(), 1000);
+      }
+    }
+  }, [room.miniGameState, step, isMyTurn, room.players]);
+
   const handleForceClosePenalty = async () => {
     if (!isMyTurn || !activePenaltyCard) return;
     
