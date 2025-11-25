@@ -21,6 +21,12 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   const [revealedMilestones, setRevealedMilestones] = useState([]);
   const [activePenaltyCard, setActivePenaltyCard] = useState(null);
 
+  const positionsRef = useRef(positions);
+
+  useEffect(() => {
+    positionsRef.current = positions;
+  }, [positions]);
+
   useEffect(() => {
     if (room.miniGameState) {
       setStep(room.miniGameState.step || 'betting');
@@ -36,59 +42,67 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
     }
   }, [room.miniGameState]);
 
-  // Auto-start race when all bets are in
-  useEffect(() => {
-    if (step === 'betting' && isMyTurn) {
-      const bets = room.miniGameState?.bets || {};
-      const betCount = Object.keys(bets).length;
-      const totalPlayers = Object.keys(room.players).length;
-      
-      if (betCount >= totalPlayers) {
-        setTimeout(() => startRace(), 1000);
-      }
-    }
-  }, [room.miniGameState, step, isMyTurn]);
+  // Derived key for penalty to ensure stability
+  const penaltyKey = activePenaltyCard ? `${activePenaltyCard.suit}-${activePenaltyCard.value}` : null;
+  const penaltyStartTime = room.miniGameState?.penaltyStartTime || 0;
 
-  // Ref to track if we are currently processing a penalty to avoid re-triggering or clearing timeout on re-renders
-  const processingPenaltyRef = useRef(false);
-
-  // Auto-draw cards during race
+  // Effect 1: Handle Penalty Logic
   useEffect(() => {
-    if (step === 'racing' && isMyTurn && !winner) {
-      if (activePenaltyCard) {
-        // Only start the timeout if we aren't already processing this penalty
-        if (!processingPenaltyRef.current) {
-          processingPenaltyRef.current = true;
-          
-          // Pause for penalty animation then apply penalty and clear it
-          const timer = setTimeout(async () => {
-            const penaltySuit = activePenaltyCard.suit;
-            const currentPos = positions[penaltySuit];
-            const newPos = Math.max(0, currentPos - 1);
-            
-            const updates = {
-              activePenaltyCard: null,
-              [`positions/${penaltySuit}`]: newPos
-            };
-            
-            await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
-            processingPenaltyRef.current = false; // Reset flag after processing
-          }, 4000); // Show penalty for 4 seconds
-          
-          return () => clearTimeout(timer);
+    if (step === 'racing' && isMyTurn && penaltyKey) {
+      const now = Date.now();
+      const elapsed = now - penaltyStartTime;
+      const remaining = Math.max(0, 4000 - elapsed);
+
+      const timer = setTimeout(async () => {
+        if (!activePenaltyCard) return;
+
+        const penaltySuit = activePenaltyCard.suit;
+        // Use ref to get latest positions
+        const currentPos = positionsRef.current[penaltySuit]; 
+        const newPos = Math.max(0, currentPos - 1);
+        
+        const updates = {
+          activePenaltyCard: null,
+          penaltyStartTime: null,
+          [`positions/${penaltySuit}`]: newPos
+        };
+        
+        try {
+          await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
+        } catch (err) {
+          console.error("Failed to clear penalty:", err);
         }
-      } else {
-        // Normal draw loop - faster speed
-        // Ensure we are not processing a penalty before drawing
-        if (!processingPenaltyRef.current) {
-          const timer = setTimeout(() => {
-            drawRaceCard();
-          }, 1800); // Faster draw speed
-          return () => clearTimeout(timer);
-        }
-      }
+      }, remaining);
+
+      return () => clearTimeout(timer);
     }
-  }, [step, drawnCards.length, winner, isMyTurn, activePenaltyCard, positions]); // Added positions dependency
+  }, [penaltyKey, penaltyStartTime, step, isMyTurn, room.code]);
+
+  // Effect 2: Handle Drawing Logic
+  useEffect(() => {
+    if (step === 'racing' && isMyTurn && !winner && !activePenaltyCard) {
+      const timer = setTimeout(() => {
+        drawRaceCard();
+      }, 1800);
+      return () => clearTimeout(timer);
+    }
+  }, [step, isMyTurn, winner, activePenaltyCard, drawnCards.length]);
+
+  const handleForceClosePenalty = async () => {
+    if (!isMyTurn || !activePenaltyCard) return;
+    
+    const penaltySuit = activePenaltyCard.suit;
+    const currentPos = positionsRef.current[penaltySuit];
+    const newPos = Math.max(0, currentPos - 1);
+    
+    const updates = {
+      activePenaltyCard: null,
+      penaltyStartTime: null,
+      [`positions/${penaltySuit}`]: newPos
+    };
+    
+    await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
+  };
 
   const handleSuitSelect = (suit) => {
     if (step !== 'betting' || betStep !== 'suit') return;
@@ -126,7 +140,8 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       winner: null,
       penaltyCards: penalties,
       revealedMilestones: [],
-      activePenaltyCard: null
+      activePenaltyCard: null,
+      penaltyStartTime: 0
     });
   };
 
@@ -152,7 +167,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
           newRevealedMilestones.push(milestone);
           // Penalty Logic: Just trigger it, don't move back yet
           penaltyTriggered = penaltyCards[milestone];
-          soundService.playClick(); // Or a specific penalty sound
+          soundService.playClick(); 
         }
       }
     });
@@ -172,6 +187,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
 
     if (penaltyTriggered) {
       updates.activePenaltyCard = penaltyTriggered;
+      updates.penaltyStartTime = Date.now();
     }
 
     if (newWinner) {
@@ -281,7 +297,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
     return (
       <div className="racing-phase">
         {activePenaltyCard && (
-          <div className="penalty-overlay">
+          <div className="penalty-overlay" onClick={handleForceClosePenalty}>
             <div className="penalty-card-large animated-penalty" style={{ color: getSuitColor(activePenaltyCard.suit) }}>
               <div className="penalty-title">MALUS !</div>
               <div className="penalty-content">
@@ -289,6 +305,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
                 <span className="card-suit">{activePenaltyCard.suit}</span>
               </div>
               <div className="penalty-desc">Le cheval {activePenaltyCard.suit} recule !</div>
+              {isMyTurn && <div className="tap-hint-small">(Tap pour fermer)</div>}
             </div>
           </div>
         )}
