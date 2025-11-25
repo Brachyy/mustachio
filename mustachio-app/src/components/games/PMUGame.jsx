@@ -47,13 +47,27 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
 
   // Effect 1: Handle Penalty Logic
   useEffect(() => {
+    console.log('[PMU Penalty Effect] Triggered with:', {
+      step,
+      isMyTurn,
+      penaltyKey,
+      activePenaltyCard,
+      hasActivePenalty: !!activePenaltyCard
+    });
+
     if (step === 'racing' && isMyTurn && penaltyKey) {
       // Capture the penalty card at the moment the effect runs
       const penaltyCardSnapshot = activePenaltyCard;
-      if (!penaltyCardSnapshot) return;
+      if (!penaltyCardSnapshot) {
+        console.log('[PMU Penalty] No penalty card snapshot, exiting');
+        return;
+      }
+
+      console.log('[PMU Penalty] Setting 4s timeout for penalty:', penaltyCardSnapshot);
 
       // Wait 4 seconds then clear the penalty and apply movement
       const timer = setTimeout(async () => {
+        console.log('[PMU Penalty] Timeout fired! Clearing penalty:', penaltyCardSnapshot);
         const penaltySuit = penaltyCardSnapshot.suit;
         const currentPos = positionsRef.current[penaltySuit]; 
         const newPos = Math.max(0, currentPos - 1);
@@ -63,14 +77,19 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
           [`positions/${penaltySuit}`]: newPos
         };
         
+        console.log('[PMU Penalty] Sending updates to Firebase:', updates);
         try {
           await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
+          console.log('[PMU Penalty] Successfully cleared penalty');
         } catch (err) {
-          console.error("Failed to clear penalty:", err);
+          console.error("[PMU Penalty] Failed to clear penalty:", err);
         }
       }, 4000);
 
-      return () => clearTimeout(timer);
+      return () => {
+        console.log('[PMU Penalty] Cleanup: clearing timeout');
+        clearTimeout(timer);
+      };
     }
   }, [penaltyKey, step, isMyTurn, room.code]);
 
@@ -98,8 +117,14 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   }, [room.miniGameState, step, isMyTurn, room.players]);
 
   const handleForceClosePenalty = async () => {
-    if (!isMyTurn || !activePenaltyCard) return;
+    console.log('[PMU Manual Close] Clicked! isMyTurn:', isMyTurn, 'activePenaltyCard:', activePenaltyCard);
     
+    if (!isMyTurn || !activePenaltyCard) {
+      console.log('[PMU Manual Close] Blocked - not my turn or no penalty card');
+      return;
+    }
+    
+    console.log('[PMU Manual Close] Proceeding with manual close');
     const penaltySuit = activePenaltyCard.suit;
     const currentPos = positionsRef.current[penaltySuit];
     const newPos = Math.max(0, currentPos - 1);
@@ -109,7 +134,9 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       [`positions/${penaltySuit}`]: newPos
     };
     
+    console.log('[PMU Manual Close] Sending updates:', updates);
     await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
+    console.log('[PMU Manual Close] Successfully closed penalty');
   };
 
   const handleSuitSelect = (suit) => {
