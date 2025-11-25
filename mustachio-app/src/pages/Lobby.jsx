@@ -111,9 +111,16 @@ const Lobby = () => {
             </div>
           ))}
         </div>
+        
+        {!isHost && (
+          <div className="waiting-host-inline">
+            <Loader size="small" />
+            <p>En attente de l'hôte...</p>
+          </div>
+        )}
       </div>
 
-      {isHost ? (
+      {isHost && (
         <button 
           className="btn btn-primary start-btn"
           onClick={() => startGame(roomCode)}
@@ -122,11 +129,6 @@ const Lobby = () => {
           <Play size={24} />
           Démarrer la partie
         </button>
-      ) : (
-        <div className="waiting-host">
-          <Loader size="small" />
-          <p>En attente de l'hôte...</p>
-        </div>
       )}
 
       {showSettings && (
