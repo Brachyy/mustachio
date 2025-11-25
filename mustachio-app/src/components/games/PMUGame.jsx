@@ -71,9 +71,9 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
         return;
       }
 
-      console.log('[PMU Penalty] Setting 4s timeout for penalty:', penaltyCardSnapshot);
+      console.log('[PMU Penalty] Setting 2.5s timeout for penalty:', penaltyCardSnapshot);
 
-      // Wait 4 seconds then clear the penalty and apply movement
+      // Wait 2.5 seconds then clear the penalty and apply movement
       const timer = setTimeout(async () => {
         console.log('[PMU Penalty] Timeout fired! Clearing penalty:', penaltyCardSnapshot);
         const penaltySuit = penaltyCardSnapshot.suit;
@@ -92,7 +92,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
         } catch (err) {
           console.error("[PMU Penalty] Failed to clear penalty:", err);
         }
-      }, 4000);
+      }, 2500);
 
       return () => {
         console.log('[PMU Penalty] Cleanup: clearing timeout');
