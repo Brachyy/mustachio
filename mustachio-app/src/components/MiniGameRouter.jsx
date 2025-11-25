@@ -14,6 +14,11 @@ import { endTurn } from '../services/roomService';
 
 const MiniGameRouter = ({ cardValue, room, isMyTurn, playerId }) => {
   const rule = GAME_RULES[cardValue];
+  const [hasSeenRules, setHasSeenRules] = React.useState(false);
+
+  React.useEffect(() => {
+    setHasSeenRules(false);
+  }, [cardValue]);
 
   const handleNext = async () => {
     if (isMyTurn) {
@@ -25,7 +30,28 @@ const MiniGameRouter = ({ cardValue, room, isMyTurn, playerId }) => {
     }
   };
 
+  const handleStartGame = () => {
+    setHasSeenRules(true);
+  };
+
   if (!rule) return <div>Jeu inconnu</div>;
+
+  // If rules haven't been seen yet, show the rule card
+  if (!hasSeenRules) {
+    const isSimple = rule.type === 'simple';
+    return (
+      <SimpleRuleGame 
+        title={rule.title} 
+        description={rule.description} 
+        onNext={isSimple ? handleNext : handleStartGame}
+        isMyTurn={isMyTurn}
+        room={room}
+        buttonText={isSimple ? "J'ai compris / Suivant" : "Commencer le jeu"}
+      />
+    );
+  }
+
+  // ... Specific Game Rendering ...
 
   if (cardValue === '3') {
     return (
@@ -126,6 +152,7 @@ const MiniGameRouter = ({ cardValue, room, isMyTurn, playerId }) => {
     );
   }
 
+  // Fallback for simple games if they somehow bypass the first check (shouldn't happen with current logic, but safe to keep)
   return (
     <SimpleRuleGame 
       title={rule.title} 

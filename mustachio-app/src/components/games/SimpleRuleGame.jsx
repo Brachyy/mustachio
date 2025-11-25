@@ -1,7 +1,7 @@
 import React from 'react';
 import './SimpleRuleGame.css';
 
-const SimpleRuleGame = ({ title, description, onNext, isMyTurn, room }) => {
+const SimpleRuleGame = ({ title, description, onNext, isMyTurn, room, buttonText = "J'ai compris / Suivant" }) => {
   const activePlayerName = room?.players[room?.order[room?.currentTurnIndex]]?.name;
   
   return (
@@ -12,7 +12,7 @@ const SimpleRuleGame = ({ title, description, onNext, isMyTurn, room }) => {
       </div>
       {isMyTurn ? (
         <button className="btn btn-primary next-btn" onClick={onNext}>
-          J'ai compris / Suivant
+          {buttonText}
         </button>
       ) : (
         <p className="waiting-message">En attente de {activePlayerName}...</p>
