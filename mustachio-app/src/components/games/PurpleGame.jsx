@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { update, ref } from 'firebase/database';
 import { db } from '../../firebase';
 import { generateDeck } from '../../utils/deck';
+import { endTurn } from '../../services/roomService';
 import './PurpleGame.css';
 
 const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
@@ -44,7 +45,11 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
     
     if (newPlayersDone.length >= room.order.length) {
       // Everyone finished
-      onNext();
+      try {
+        await endTurn(room.code);
+      } catch (error) {
+        console.error("Error ending turn:", error);
+      }
     } else {
       // Next player
       await update(ref(db, `rooms/${room.code}/miniGameState`), {
@@ -88,8 +93,20 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
     }
 
     const newCards = [...cards, newCard];
-    const sips = won ? 0 : (step + 1); 
     
+    // Calculate sips based on new rules:
+    // Step 0: 1 sip
+    // Step 1: 2 sips
+    // Step 2: 3 sips
+    // Step 3: 3 sips (last step adds 0)
+    let sips = step + 1;
+    if (step === 3) sips = 3;
+
+    let action = 'drink'; // Default action on loss
+    if (won && step === 3) {
+      action = 'distribute';
+    }
+
     const nextStep = step + 1;
 
     await update(ref(db, `rooms/${room.code}/miniGameState`), {
@@ -98,6 +115,7 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
       lastResult: {
         won,
         sips,
+        action,
         player: room.players[playerId]?.name || 'Joueur'
       }
     });
@@ -128,9 +146,12 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
 
   const renderMessage = () => {
     if (!room.miniGameState?.lastResult) return null;
-    const { won, sips, player } = room.miniGameState.lastResult;
+    const { won, sips, action, player } = room.miniGameState.lastResult;
     
     if (won) {
+      if (action === 'distribute') {
+        return <div className="message win">Gagné ! {isCurrentPlayer ? `Distribue ${sips} gorgées !` : `${player} distribue ${sips} gorgées !`}</div>;
+      }
       return <div className="message win">Gagné ! Continue.</div>;
     } else {
       return (

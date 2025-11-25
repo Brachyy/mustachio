@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { update, ref, set } from 'firebase/database';
 import { db } from '../../firebase';
 import { generateDeck } from '../../utils/deck';
@@ -49,30 +49,43 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
     }
   }, [room.miniGameState, step, isMyTurn]);
 
+  // Ref to track if we are currently processing a penalty to avoid re-triggering or clearing timeout on re-renders
+  const processingPenaltyRef = useRef(false);
+
   // Auto-draw cards during race
   useEffect(() => {
     if (step === 'racing' && isMyTurn && !winner) {
       if (activePenaltyCard) {
-        // Pause for penalty animation then apply penalty and clear it
-        const timer = setTimeout(async () => {
-          const penaltySuit = activePenaltyCard.suit;
-          const currentPos = positions[penaltySuit];
-          const newPos = Math.max(0, currentPos - 1);
+        // Only start the timeout if we aren't already processing this penalty
+        if (!processingPenaltyRef.current) {
+          processingPenaltyRef.current = true;
           
-          const updates = {
-            activePenaltyCard: null,
-            [`positions/${penaltySuit}`]: newPos
-          };
+          // Pause for penalty animation then apply penalty and clear it
+          const timer = setTimeout(async () => {
+            const penaltySuit = activePenaltyCard.suit;
+            const currentPos = positions[penaltySuit];
+            const newPos = Math.max(0, currentPos - 1);
+            
+            const updates = {
+              activePenaltyCard: null,
+              [`positions/${penaltySuit}`]: newPos
+            };
+            
+            await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
+            processingPenaltyRef.current = false; // Reset flag after processing
+          }, 4000); // Show penalty for 4 seconds
           
-          await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
-        }, 4000); // Show penalty for 4 seconds
-        return () => clearTimeout(timer);
+          return () => clearTimeout(timer);
+        }
       } else {
         // Normal draw loop - faster speed
-        const timer = setTimeout(() => {
-          drawRaceCard();
-        }, 1800); // Faster draw speed
-        return () => clearTimeout(timer);
+        // Ensure we are not processing a penalty before drawing
+        if (!processingPenaltyRef.current) {
+          const timer = setTimeout(() => {
+            drawRaceCard();
+          }, 1800); // Faster draw speed
+          return () => clearTimeout(timer);
+        }
       }
     }
   }, [step, drawnCards.length, winner, isMyTurn, activePenaltyCard, positions]); // Added positions dependency
