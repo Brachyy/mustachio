@@ -4,19 +4,24 @@
   align-items: center;
   width: 100%;
   color: white;
+  /* Fallback definition if global vars fail */
+  --card-width: min(35vw, 200px);
+  --card-height: calc(var(--card-width) * 1.5);
 }
 
 .cards-row {
   display: flex;
-  gap: 10px;
+  /* gap: 10px; Removed to allow overlap */
   margin: 20px 0;
-  flex-wrap: wrap;
+  flex-wrap: nowrap; /* Prevent wrapping to keep the stack line */
   justify-content: center;
+  align-items: center;
+  min-height: calc(var(--card-height) + 20px); /* Ensure container has height */
 }
 
 .purple-card {
-  width: var(--card-width);
-  height: var(--card-height);
+  width: var(--card-width) !important;
+  height: var(--card-height) !important;
   background: white;
   border-radius: 12px;
   color: black;
@@ -26,9 +31,22 @@
   padding: 10px;
   font-weight: bold;
   animation: flipIn 0.5s;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  box-sizing: border-box;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.3); /* Shadow on the left to show separation */
+  box-sizing: border-box !important;
   flex: 0 0 auto;
+  margin-left: calc(var(--card-width) * -0.55) !important; /* Overlap by ~55% */
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.purple-card:first-child {
+  margin-left: 0 !important;
+}
+
+.purple-card:hover {
+  transform: translateY(-10px); /* Pop up on hover */
+  z-index: 10;
+  margin-right: 10px; /* Make space when hovering */
 }
 
 .purple-card.red {
@@ -56,8 +74,8 @@
 }
 
 .card-placeholder {
-  width: var(--card-width);
-  height: var(--card-height);
+  width: var(--card-width) !important;
+  height: var(--card-height) !important;
   border: 3px dashed rgba(255,255,255,0.3);
   border-radius: 12px;
   display: flex;
@@ -66,8 +84,16 @@
   font-size: 3rem;
   background: rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.5);
-  box-sizing: border-box;
+  box-sizing: border-box !important;
   flex: 0 0 auto;
+  margin-left: calc(var(--card-width) * -0.55) !important; /* Overlap placeholder too */
+  position: relative;
+  z-index: 0;
+}
+
+/* Ensure placeholder doesn't overlap if it's the first item (shouldn't happen in game logic but good for safety) */
+.card-placeholder:first-child {
+  margin-left: 0 !important;
 }
 
 .message-area {
