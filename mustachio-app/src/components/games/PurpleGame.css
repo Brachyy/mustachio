@@ -27,6 +27,8 @@
   font-weight: bold;
   animation: flipIn 0.5s;
   box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
 .purple-card.red {
@@ -64,6 +66,8 @@
   font-size: 3rem;
   background: rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.5);
+  box-sizing: border-box;
+  flex: 0 0 auto;
 }
 
 .message-area {
