@@ -163,6 +163,42 @@ const Game = ({ room, playerId }) => {
     }
   }, [viewState]);
 
+  const handleDraw = async () => {
+    if (!isMyTurn || viewState !== 'idle') return;
+    try {
+      soundService.playDraw();
+      await drawCard(room.code);
+    } catch (error) {
+      console.error("Error drawing card:", error);
+    }
+  };
+
+  const handleLeave = async () => {
+    if (window.confirm('Voulez-vous vraiment quitter la partie ?')) {
+      try {
+        await leaveRoom(room.code, playerId);
+        toast.info('Vous avez quitté la partie');
+        navigate('/');
+      } catch (error) {
+        toast.error('Erreur lors de la déconnexion');
+      }
+    }
+  };
+
+  const renderCardFace = (card) => (
+    <div className={`card-face card-front ${['♥', '♦'].includes(card.suit) ? 'red' : 'black'}`}>
+      <div className="card-corner top-left">
+        <span>{card.value}</span>
+        <span>{card.suit}</span>
+      </div>
+      <div className="card-center-suit">{card.suit}</div>
+      <div className="card-corner bottom-right">
+        <span>{card.value}</span>
+        <span>{card.suit}</span>
+      </div>
+    </div>
+  );
+
   const currentCardId = getCardId(activeCard);
   const isNewCardPendingAnimation = currentCardId !== lastProcessedCardId.current;
 
