@@ -73,10 +73,11 @@ const CupidGame = ({ room, isMyTurn, onNext, playerId }) => {
               key={pid} 
               className={`player-card-select ${selectedLovers.includes(pid) ? 'selected' : ''}`}
               onClick={() => handleTogglePlayer(pid)}
+              style={{ 
+                backgroundColor: `hsl(${(player.avatar || 0) * 18}, 70%, 50%)`,
+                color: 'white'
+              }}
             >
-              <div className="player-avatar" style={{ backgroundColor: `hsl(${(player.avatar || 0) * 18}, 70%, 50%)` }}>
-                <img src="/assets/avatar.png" alt="Avatar" />
-              </div>
               <div className="player-name">{player.name}</div>
               {selectedLovers.includes(pid) && <div className="heart-badge">❤️</div>}
             </div>
