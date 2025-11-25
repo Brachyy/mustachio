@@ -53,22 +53,29 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   useEffect(() => {
     if (step === 'racing' && isMyTurn && !winner) {
       if (activePenaltyCard) {
-        // Pause for penalty animation then clear it
+        // Pause for penalty animation then apply penalty and clear it
         const timer = setTimeout(async () => {
-          await update(ref(db, `rooms/${room.code}/miniGameState`), {
-            activePenaltyCard: null
-          });
+          const penaltySuit = activePenaltyCard.suit;
+          const currentPos = positions[penaltySuit];
+          const newPos = Math.max(0, currentPos - 1);
+          
+          const updates = {
+            activePenaltyCard: null,
+            [`positions/${penaltySuit}`]: newPos
+          };
+          
+          await update(ref(db, `rooms/${room.code}/miniGameState`), updates);
         }, 4000); // Show penalty for 4 seconds
         return () => clearTimeout(timer);
       } else {
-        // Normal draw loop - slower speed
+        // Normal draw loop - faster speed
         const timer = setTimeout(() => {
           drawRaceCard();
-        }, 2500); // Slower draw speed
+        }, 1800); // Faster draw speed
         return () => clearTimeout(timer);
       }
     }
-  }, [step, drawnCards.length, winner, isMyTurn, activePenaltyCard]);
+  }, [step, drawnCards.length, winner, isMyTurn, activePenaltyCard, positions]); // Added positions dependency
 
   const handleSuitSelect = (suit) => {
     if (step !== 'betting' || betStep !== 'suit') return;
@@ -130,19 +137,16 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
         const allPassed = Object.values(newPositions).every(pos => pos >= milestone);
         if (allPassed) {
           newRevealedMilestones.push(milestone);
-          // Penalty Logic: Move horse back
-          const penaltyCard = penaltyCards[milestone];
-          newPositions[penaltyCard.suit] = Math.max(0, newPositions[penaltyCard.suit] - 1);
-          penaltyTriggered = penaltyCard;
+          // Penalty Logic: Just trigger it, don't move back yet
+          penaltyTriggered = penaltyCards[milestone];
           soundService.playClick(); // Or a specific penalty sound
         }
       }
     });
 
     let newWinner = null;
-    // Check winner (only if no penalty triggered this turn, or check after penalty?)
-    // Usually penalty applies immediately.
-    if (newPositions[suit] >= TRACK_LENGTH) {
+    // Check winner only if no penalty triggered
+    if (!penaltyTriggered && newPositions[suit] >= TRACK_LENGTH) {
       newWinner = suit;
       soundService.playWin();
     }
