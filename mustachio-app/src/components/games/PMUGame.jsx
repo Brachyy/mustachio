@@ -17,6 +17,8 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   const [betStep, setBetStep] = useState('suit'); // 'suit' or 'sips'
   const [selectedSuit, setSelectedSuit] = useState(null);
   const [winner, setWinner] = useState(null);
+  const [penaltyCards, setPenaltyCards] = useState({});
+  const [revealedMilestones, setRevealedMilestones] = useState([]);
   const [activePenaltyCard, setActivePenaltyCard] = useState(null);
 
   useEffect(() => {
