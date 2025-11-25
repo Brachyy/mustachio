@@ -60,6 +60,9 @@ const Home = () => {
         <button onClick={handleJoinGame} className="btn btn-secondary">
           Rejoindre une Table
         </button>
+        <button onClick={() => navigate('/rules')} className="btn btn-outline">
+          Règles du Jeu
+        </button>
       </div>
     </div>
   );

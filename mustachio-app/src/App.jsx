@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Join from './pages/Join';
 import Lobby from './pages/Lobby';
+import Rules from './pages/Rules';
 import { ToastProvider } from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import './App.css';
@@ -16,6 +17,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/join" element={<Join />} />
             <Route path="/lobby/:roomCode" element={<Lobby />} />
+            <Route path="/rules" element={<Rules />} />
           </Routes>
         </Router>
       </ToastProvider>

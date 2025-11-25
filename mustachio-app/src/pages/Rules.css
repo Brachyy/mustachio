@@ -1,0 +1,119 @@
+.rules-page {
+  min-height: 100vh;
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  color: white;
+}
+
+.rules-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.rules-header h1 {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  color: var(--primary);
+  font-size: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.back-btn {
+  position: absolute;
+  left: 0;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+.rules-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.rule-item {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 15px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.rule-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.rule-item.expanded {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--primary);
+}
+
+.rule-summary {
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.rule-logo-container {
+  width: 50px;
+  height: 50px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.rule-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.rule-title {
+  flex: 1;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.rule-details {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0, 1, 0, 1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.rule-item.expanded .rule-details {
+  max-height: 200px; /* Adjust based on content */
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.rule-details p {
+  padding: 20px;
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
