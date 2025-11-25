@@ -71,12 +71,10 @@
   color: #e74c3c;
 }
 
-.drink-msg {
-  font-size: 1.5rem;
-  color: #f1c40f;
-  text-align: center;
-  font-weight: bold;
-  animation: pulse 1s infinite;
+.next-button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 @keyframes rollIn {

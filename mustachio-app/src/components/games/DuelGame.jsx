@@ -153,7 +153,11 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
           )}
         </div>
 
-        {isMyTurn && <button className="btn btn-secondary" onClick={onNext}>Suivant</button>}
+          {isMyTurn && (
+            <div className="next-button-container">
+              <button className="btn btn-secondary" onClick={onNext}>Suivant</button>
+            </div>
+          )}
       </div>
     );
   };

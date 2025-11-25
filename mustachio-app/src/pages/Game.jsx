@@ -198,7 +198,7 @@ const Game = ({ room, playerId }) => {
           <LogOut size={24} />
         </button>
         <div className={`turn-indicator ${isMyTurn ? 'my-turn' : ''}`}>
-          <div className="turn-avatar" style={{ backgroundColor: `hsl(${activePlayer.avatar * 18}, 70%, 50%)` }}>
+          <div className="turn-avatar" style={{ backgroundColor: `hsl(${(activePlayer?.avatar || 0) * 18}, 70%, 50%)` }}>
             <img src="/assets/avatar.png" alt="Avatar" />
           </div>
           <span>{isMyTurn ? "C'est à toi !" : `Tour de ${activePlayer.name}`}</span>

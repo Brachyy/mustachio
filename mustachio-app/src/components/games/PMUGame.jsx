@@ -17,8 +17,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   const [betStep, setBetStep] = useState('suit'); // 'suit' or 'sips'
   const [selectedSuit, setSelectedSuit] = useState(null);
   const [winner, setWinner] = useState(null);
-  const [penaltyCards, setPenaltyCards] = useState({});
-  const [revealedMilestones, setRevealedMilestones] = useState([]);
+  const [activePenaltyCard, setActivePenaltyCard] = useState(null);
 
   useEffect(() => {
     if (room.miniGameState) {
@@ -27,6 +26,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       if (room.miniGameState.drawnCards) setDrawnCards(room.miniGameState.drawnCards);
       if (room.miniGameState.penaltyCards) setPenaltyCards(room.miniGameState.penaltyCards);
       if (room.miniGameState.revealedMilestones) setRevealedMilestones(room.miniGameState.revealedMilestones);
+      if (room.miniGameState.activePenaltyCard !== undefined) setActivePenaltyCard(room.miniGameState.activePenaltyCard);
       if (room.miniGameState.winner) {
         if (!winner) soundService.playWin();
         setWinner(room.miniGameState.winner);
@@ -50,12 +50,23 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   // Auto-draw cards during race
   useEffect(() => {
     if (step === 'racing' && isMyTurn && !winner) {
-      const timer = setTimeout(() => {
-        drawRaceCard();
-      }, 700);
-      return () => clearTimeout(timer);
+      if (activePenaltyCard) {
+        // Pause for penalty animation then clear it
+        const timer = setTimeout(async () => {
+          await update(ref(db, `rooms/${room.code}/miniGameState`), {
+            activePenaltyCard: null
+          });
+        }, 4000); // Show penalty for 4 seconds
+        return () => clearTimeout(timer);
+      } else {
+        // Normal draw loop - slower speed
+        const timer = setTimeout(() => {
+          drawRaceCard();
+        }, 2500); // Slower draw speed
+        return () => clearTimeout(timer);
+      }
     }
-  }, [step, drawnCards.length, winner, isMyTurn]);
+  }, [step, drawnCards.length, winner, isMyTurn, activePenaltyCard]);
 
   const handleSuitSelect = (suit) => {
     if (step !== 'betting' || betStep !== 'suit') return;
@@ -92,7 +103,8 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       drawnCards: [],
       winner: null,
       penaltyCards: penalties,
-      revealedMilestones: []
+      revealedMilestones: [],
+      activePenaltyCard: null
     });
   };
 
@@ -109,17 +121,25 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
     
     // Check for milestone reveals
     const newRevealedMilestones = [...revealedMilestones];
+    let penaltyTriggered = null;
+
     MILESTONES.forEach(milestone => {
       if (!newRevealedMilestones.includes(milestone)) {
         const allPassed = Object.values(newPositions).every(pos => pos >= milestone);
         if (allPassed) {
           newRevealedMilestones.push(milestone);
-          soundService.playClick();
+          // Penalty Logic: Move horse back
+          const penaltyCard = penaltyCards[milestone];
+          newPositions[penaltyCard.suit] = Math.max(0, newPositions[penaltyCard.suit] - 1);
+          penaltyTriggered = penaltyCard;
+          soundService.playClick(); // Or a specific penalty sound
         }
       }
     });
 
     let newWinner = null;
+    // Check winner (only if no penalty triggered this turn, or check after penalty?)
+    // Usually penalty applies immediately.
     if (newPositions[suit] >= TRACK_LENGTH) {
       newWinner = suit;
       soundService.playWin();
@@ -130,6 +150,10 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       drawnCards: newDrawnCards,
       revealedMilestones: newRevealedMilestones
     };
+
+    if (penaltyTriggered) {
+      updates.activePenaltyCard = penaltyTriggered;
+    }
 
     if (newWinner) {
       updates.winner = newWinner;
@@ -242,6 +266,18 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
 
     return (
       <div className="racing-phase">
+        {activePenaltyCard && (
+          <div className="penalty-overlay">
+            <div className="penalty-card-large animated-penalty" style={{ color: getSuitColor(activePenaltyCard.suit) }}>
+              <div className="penalty-title">MALUS !</div>
+              <div className="penalty-content">
+                <span className="card-value">{activePenaltyCard.value}</span>
+                <span className="card-suit">{activePenaltyCard.suit}</span>
+              </div>
+              <div className="penalty-desc">Le cheval {activePenaltyCard.suit} recule !</div>
+            </div>
+          </div>
+        )}
         <div className="race-card-display">
           {lastCard ? (
             <div className="drawn-card" style={{ color: getSuitColor(lastCard.suit) }}>

@@ -232,6 +232,7 @@
 }
 
 /* Animations */
+/* Animations */
 @keyframes gallop {
   from { transform: translateY(0) rotate(-5deg); }
   to { transform: translateY(-5px) rotate(5deg); }
@@ -262,6 +263,73 @@
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.7; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+  20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+/* Penalty Overlay */
+.penalty-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s;
+}
+
+.animated-penalty {
+  transform: scale(1.5);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 30px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+  animation: bounceIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.penalty-title {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #e74c3c;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.penalty-content {
+  display: flex;
+  gap: 10px;
+  font-size: 4rem;
+  font-weight: bold;
+}
+
+.penalty-desc {
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.6); opacity: 1; }
+  100% { transform: scale(1.5); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Responsive */
