@@ -186,11 +186,6 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
                     className={`track-step ${i === positions[suit] ? 'active' : ''} ${isMilestone ? 'milestone' : ''}`}
                   >
                     {i === positions[suit] && <span className="horse">🐎</span>}
-                    {isMilestone && isRevealed && penaltyCards[i] && (
-                      <div className="penalty-card-mini" style={{ color: getSuitColor(penaltyCards[i].suit) }}>
-                        {penaltyCards[i].value}
-                      </div>
-                    )}
                   </div>
                 );
               })}
