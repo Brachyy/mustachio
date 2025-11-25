@@ -1,4 +1,6 @@
 import React from 'react';
+import { update, ref } from 'firebase/database';
+import { db } from '../firebase';
 import { GAME_RULES } from '../utils/rules';
 import TimerGame from './games/TimerGame';
 import SixTimeGame from './games/SixTimeGame';
@@ -14,11 +16,19 @@ import { endTurn } from '../services/roomService';
 
 const MiniGameRouter = ({ cardValue, room, isMyTurn, playerId }) => {
   const rule = GAME_RULES[cardValue];
-  const [hasSeenRules, setHasSeenRules] = React.useState(false);
+  
+  // Read hasSeenRules from Firebase
+  const hasSeenRules = room.miniGameState?.hasSeenRules || false;
 
+  // Reset hasSeenRules when card changes (only active player)
   React.useEffect(() => {
-    setHasSeenRules(false);
-  }, [cardValue]);
+    if (isMyTurn && room.miniGameState?.hasSeenRules) {
+      // Clear it when a new card is drawn
+      update(ref(db, `rooms/${room.code}/miniGameState`), {
+        hasSeenRules: false
+      }).catch(console.error);
+    }
+  }, [cardValue, isMyTurn, room.code]);
 
   const handleNext = async () => {
     if (isMyTurn) {
@@ -30,8 +40,16 @@ const MiniGameRouter = ({ cardValue, room, isMyTurn, playerId }) => {
     }
   };
 
-  const handleStartGame = () => {
-    setHasSeenRules(true);
+  const handleStartGame = async () => {
+    if (isMyTurn) {
+      try {
+        await update(ref(db, `rooms/${room.code}/miniGameState`), {
+          hasSeenRules: true
+        });
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   if (!rule) return <div>Jeu inconnu</div>;
