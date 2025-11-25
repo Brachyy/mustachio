@@ -294,8 +294,8 @@ const Game = ({ room, playerId }) => {
         </div>
       )}
 
-      {/* Status Section - Always visible */}
-      {(room.lovers || room.mustachio) && (
+      {/* Status Section - Hidden during minigame */}
+      {(room.lovers || room.mustachio) && viewState !== 'minigame' && (
         <div className="status-section">
           {room.lovers && (
             <div className="status-badge lovers-badge">
