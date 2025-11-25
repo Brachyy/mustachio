@@ -15,6 +15,14 @@
   justify-content: space-between;
   margin-bottom: var(--spacing-lg);
   position: relative;
+  height: 50px; /* Ensure height for absolute positioning */
+}
+
+.header-left {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  z-index: 10; /* Ensure buttons are clickable above title if overlap */
 }
 
 .lobby-header h2 {
@@ -24,6 +32,7 @@
   margin: 0;
   font-size: 1.5rem;
   white-space: nowrap;
+  pointer-events: none; /* Let clicks pass through to buttons if needed */
 }
 
 .room-code-display {
@@ -40,6 +49,7 @@
   border: 1px solid var(--glass-border);
   backdrop-filter: blur(10px);
   transition: var(--transition-fast);
+  z-index: 10;
 }
 
 .room-code-display:hover {
@@ -92,7 +102,7 @@
   transform: translateY(-5px);
 }
 
-.avatar {
+.player-avatar {
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -153,20 +163,48 @@
   100% { opacity: 0.6; }
 }
 
+.btn-icon {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--glass-border);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  padding: 0;
+}
+
+.btn-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
 /* Mobile Adjustments */
 @media (max-width: 600px) {
   .lobby-header {
     flex-direction: column;
     gap: 15px;
+    height: auto;
   }
   
   .lobby-header h2 {
     position: static;
     transform: none;
+    order: -1; /* Title first */
   }
-  
+
+  .header-left {
+    width: 100%;
+    justify-content: space-between; /* Spread buttons if multiple */
+  }
+
   .room-code-display {
     width: 100%;
     justify-content: center;
   }
 }
+
