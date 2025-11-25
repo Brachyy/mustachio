@@ -28,13 +28,20 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
   }, [positions]);
 
   useEffect(() => {
+    console.log('[PMU Firebase Sync] miniGameState updated:', room.miniGameState);
     if (room.miniGameState) {
       setStep(room.miniGameState.step || 'betting');
       if (room.miniGameState.positions) setPositions(room.miniGameState.positions);
       if (room.miniGameState.drawnCards) setDrawnCards(room.miniGameState.drawnCards);
       if (room.miniGameState.penaltyCards) setPenaltyCards(room.miniGameState.penaltyCards);
       if (room.miniGameState.revealedMilestones) setRevealedMilestones(room.miniGameState.revealedMilestones);
-      if (room.miniGameState.activePenaltyCard !== undefined) setActivePenaltyCard(room.miniGameState.activePenaltyCard);
+      
+      console.log('[PMU Firebase Sync] activePenaltyCard from Firebase:', room.miniGameState.activePenaltyCard);
+      if (room.miniGameState.activePenaltyCard !== undefined) {
+        console.log('[PMU Firebase Sync] Setting activePenaltyCard to:', room.miniGameState.activePenaltyCard);
+        setActivePenaltyCard(room.miniGameState.activePenaltyCard);
+      }
+      
       if (room.miniGameState.winner) {
         if (!winner) soundService.playWin();
         setWinner(room.miniGameState.winner);
@@ -55,6 +62,7 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       hasActivePenalty: !!activePenaltyCard
     });
 
+    // Only the active player should handle the penalty timeout and Firebase update
     if (step === 'racing' && isMyTurn && penaltyKey) {
       // Capture the penalty card at the moment the effect runs
       const penaltyCardSnapshot = activePenaltyCard;
