@@ -36,11 +36,11 @@ const PMUGame = ({ room, isMyTurn, onNext, playerId }) => {
       if (room.miniGameState.penaltyCards) setPenaltyCards(room.miniGameState.penaltyCards);
       if (room.miniGameState.revealedMilestones) setRevealedMilestones(room.miniGameState.revealedMilestones);
       
-      console.log('[PMU Firebase Sync] activePenaltyCard from Firebase:', room.miniGameState.activePenaltyCard);
-      if (room.miniGameState.activePenaltyCard !== undefined) {
-        console.log('[PMU Firebase Sync] Setting activePenaltyCard to:', room.miniGameState.activePenaltyCard);
-        setActivePenaltyCard(room.miniGameState.activePenaltyCard);
-      }
+      // CRITICAL FIX: Firebase deletes keys when set to null, so undefined means "cleared"
+      // We must always sync activePenaltyCard, converting undefined to null
+      const penaltyCardValue = room.miniGameState.activePenaltyCard || null;
+      console.log('[PMU Firebase Sync] activePenaltyCard from Firebase:', room.miniGameState.activePenaltyCard, '-> setting to:', penaltyCardValue);
+      setActivePenaltyCard(penaltyCardValue);
       
       if (room.miniGameState.winner) {
         if (!winner) soundService.playWin();
