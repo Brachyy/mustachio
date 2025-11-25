@@ -87,7 +87,7 @@ const DuelGame = ({ room, isMyTurn, onNext, playerId }) => {
                 key={pid} 
                 className="btn opponent-btn" 
                 style={{ 
-                  backgroundColor: `hsl(${p.avatar * 18}, 70%, 50%)`,
+                  backgroundColor: `hsl(${(p?.avatar || 0) * 18}, 70%, 50%)`,
                   color: 'white'
                 }}
                 onClick={() => handleSelectOpponent(pid)}
