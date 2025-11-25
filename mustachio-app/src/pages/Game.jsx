@@ -201,7 +201,7 @@ const Game = ({ room, playerId }) => {
           <div className="turn-avatar" style={{ backgroundColor: `hsl(${(activePlayer?.avatar || 0) * 18}, 70%, 50%)` }}>
             <img src="/assets/avatar.png" alt="Avatar" />
           </div>
-          <span>{isMyTurn ? "C'est à toi !" : `Tour de ${activePlayer.name}`}</span>
+          <span>{isMyTurn ? "C'est à toi !" : `Tour de ${activePlayer?.name || '...'}`}</span>
         </div>
         {viewState === 'minigame' && activeCard && (
           <div className="header-card-display">
