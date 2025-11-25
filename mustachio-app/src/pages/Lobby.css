@@ -18,7 +18,7 @@
   height: 50px; /* Ensure height for absolute positioning */
 }
 
-.header-left {
+.header-right {
   display: flex;
   gap: 10px;
   align-items: center;

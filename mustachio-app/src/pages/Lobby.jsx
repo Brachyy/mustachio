@@ -76,20 +76,22 @@ const Lobby = () => {
   return (
     <div className="lobby-container">
       <div className="lobby-header">
-        <div className="header-left">
-          <button className="btn-icon" onClick={handleLeave} title="Quitter la partie">
-            <LogOut size={24} />
-          </button>
+        <button className="btn-icon" onClick={handleLeave} title="Quitter la partie">
+          <LogOut size={24} />
+        </button>
+        
+        <h2>Salle d'attente</h2>
+        
+        <div className="header-right">
+          <div className="room-code-display" onClick={copyCode}>
+            <span>CODE: {roomCode}</span>
+            <Copy size={20} />
+          </div>
           {isHost && (
             <button className="btn-icon" onClick={() => setShowSettings(true)} title="Paramètres">
               <Settings size={24} />
             </button>
           )}
-        </div>
-        <h2>Salle d'attente</h2>
-        <div className="room-code-display" onClick={copyCode}>
-          <span>CODE: {roomCode}</span>
-          <Copy size={20} />
         </div>
       </div>
 
