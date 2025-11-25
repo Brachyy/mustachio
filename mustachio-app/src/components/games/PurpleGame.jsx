@@ -98,7 +98,7 @@ const PurpleGame = ({ room, isMyTurn, onNext, playerId }) => {
       lastResult: {
         won,
         sips,
-        player: room.players[playerId].name
+        player: room.players[playerId]?.name || 'Joueur'
       }
     });
   };
