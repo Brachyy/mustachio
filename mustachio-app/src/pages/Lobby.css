@@ -12,11 +12,22 @@
 /* Header */
 .lobby-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: center; /* Center any future title if added */
   align-items: center;
   height: 60px;
   width: 100%;
   z-index: 10;
+  position: relative;
+}
+
+.back-btn {
+  position: absolute;
+  left: 0;
+}
+
+.settings-btn {
+  position: absolute;
+  right: 0;
 }
 
 .btn-icon {
