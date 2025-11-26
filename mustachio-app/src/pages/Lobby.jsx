@@ -1,13 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { subscribeToRoom, startGame, leaveRoom } from '../services/roomService';
-import Game from './Game';
-import './Lobby.css';
-import { Copy, Users, Play, ArrowLeft, LogOut, Settings } from 'lucide-react';
+import { ref, onValue, update, remove } from 'firebase/database';
+import { db } from '../firebase';
+import { startGame } from '../services/roomService';
+import { Copy, Users, Play, LogOut, Settings } from 'lucide-react';
 import { useToast } from '../components/Toast';
 import Loader from '../components/Loader';
-import { soundService } from '../services/soundService';
 import GameSettings from '../components/GameSettings';
+import Game from './Game';
+import './Lobby.css';
 
 const Lobby = () => {
   const { roomCode } = useParams();
@@ -15,37 +16,32 @@ const Lobby = () => {
   const location = useLocation();
   const toast = useToast();
   const [room, setRoom] = useState(null);
-  const [playerId, setPlayerId] = useState(location.state?.playerId);
+  const [loading, setLoading] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  
+  // Get playerId from location state or localStorage
+  const playerId = location.state?.playerId || localStorage.getItem(`mustachio_player_${roomCode}`);
 
   useEffect(() => {
-    if (!roomCode) return;
-    
-    const unsubscribe = subscribeToRoom(roomCode, (data) => {
+    if (!roomCode || !playerId) {
+      navigate('/');
+      return;
+    }
+
+    const roomRef = ref(db, `rooms/${roomCode}`);
+    const unsubscribe = onValue(roomRef, (snapshot) => {
+      const data = snapshot.val();
       if (data) {
         setRoom(data);
+        setLoading(false);
       } else {
-        toast.error("La salle a été fermée");
+        toast.error('La partie n\'existe plus');
         navigate('/');
       }
     });
 
     return () => unsubscribe();
-  }, [roomCode, navigate, toast]);
-
-  // Play sound when players join/leave
-  const prevPlayerCountRef = React.useRef(0);
-  useEffect(() => {
-    if (room?.players) {
-      const count = Object.keys(room.players).length;
-      if (prevPlayerCountRef.current > 0 && count > prevPlayerCountRef.current) {
-        soundService.playJoin();
-      } else if (prevPlayerCountRef.current > 0 && count < prevPlayerCountRef.current) {
-        soundService.playLeave();
-      }
-      prevPlayerCountRef.current = count;
-    }
-  }, [room?.players]);
+  }, [roomCode, playerId, navigate, toast]);
 
   const copyCode = () => {
     navigator.clipboard.writeText(roomCode);
@@ -53,18 +49,22 @@ const Lobby = () => {
   };
 
   const handleLeave = async () => {
-    if (window.confirm('Voulez-vous vraiment quitter la partie ?')) {
+    if (window.confirm('Voulez-vous vraiment quitter ?')) {
       try {
-        await leaveRoom(roomCode, playerId);
-        toast.info('Vous avez quitté la partie');
+        if (room.players && Object.keys(room.players).length <= 1) {
+          await remove(ref(db, `rooms/${roomCode}`));
+        } else {
+          await remove(ref(db, `rooms/${roomCode}/players/${playerId}`));
+        }
         navigate('/');
       } catch (error) {
-        toast.error('Erreur lors de la déconnexion');
+        console.error("Error leaving room:", error);
       }
     }
   };
 
-  if (!room) return <Loader text="Chargement du salon..." fullScreen />;
+  if (loading) return <Loader />;
+  if (!room) return null;
 
   if (room.status === 'playing') {
     return <Game room={room} playerId={playerId} />;
@@ -75,62 +75,71 @@ const Lobby = () => {
 
   return (
     <div className="lobby-container">
-      <div className="lobby-header">
-        <button className="btn-icon" onClick={handleLeave} title="Quitter la partie">
+      {/* Header: Back Button (Left) & Settings (Right) */}
+      <header className="lobby-header">
+        <button className="btn-icon back-btn" onClick={handleLeave} title="Quitter">
           <LogOut size={24} />
         </button>
         
-        <h2>Salle d'attente</h2>
-        
-        <div className="header-right">
-          <div className="room-code-display" onClick={copyCode}>
-            <span>CODE: {roomCode}</span>
-            <Copy size={20} />
-          </div>
-          {isHost && (
-            <button className="btn-icon" onClick={() => setShowSettings(true)} title="Paramètres">
-              <Settings size={24} />
-            </button>
-          )}
-        </div>
-      </div>
+        {isHost && (
+          <button className="btn-icon settings-btn" onClick={() => setShowSettings(true)} title="Paramètres">
+            <Settings size={24} />
+          </button>
+        )}
+      </header>
 
-      <div className="players-list">
-        <div className="list-header">
-          <Users size={24} />
-          <h3>Moustachus ({players.length})</h3>
+      {/* Main Content */}
+      <main className="lobby-content">
+        {/* Room Code Section */}
+        <div className="room-info">
+          <h2>Code de la salle</h2>
+          <div className="code-badge" onClick={copyCode}>
+            <span className="code">{roomCode}</span>
+            <Copy size={18} />
+          </div>
         </div>
-        <div className="players-grid">
-          {players.map((player) => (
-            <div key={player.id} className="player-card bounce-in">
-              <div className="player-avatar" style={{ backgroundColor: getAvatarColor(player.avatar) }}>
-                <img src="/assets/avatar.png" alt="Avatar" />
+
+        {/* Players Grid */}
+        <div className="players-section">
+          <div className="section-header">
+            <Users size={20} />
+            <span>Joueurs ({players.length})</span>
+          </div>
+          
+          <div className="players-grid">
+            {players.map((player) => (
+              <div key={player.id} className="player-card">
+                <div className="avatar-wrapper" style={{ borderColor: getAvatarColor(player.avatar) }}>
+                  <img src="/assets/avatar.png" alt="Avatar" />
+                </div>
+                <span className="player-name">{player.name}</span>
+                {player.isHost && <span className="host-tag">Hôte</span>}
               </div>
-              <span className="player-name">{player.name}</span>
-              {player.isHost && <span className="host-badge">Hôte</span>}
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-        
-        {!isHost && (
-          <div className="waiting-host-inline">
+      </main>
+
+      {/* Footer Actions */}
+      <footer className="lobby-footer">
+        {isHost ? (
+          <button 
+            className="btn btn-primary start-btn"
+            onClick={() => startGame(roomCode)}
+            disabled={players.length < 2}
+          >
+            <Play size={24} fill="currentColor" />
+            <span>Lancer la partie</span>
+          </button>
+        ) : (
+          <div className="waiting-status">
             <Loader size="small" />
-            <p>En attente de l'hôte...</p>
+            <span>En attente de l'hôte...</span>
           </div>
         )}
-      </div>
+      </footer>
 
-      {isHost && (
-        <button 
-          className="btn btn-primary start-btn"
-          onClick={() => startGame(roomCode)}
-          disabled={players.length < 2}
-        >
-          <Play size={24} />
-          Démarrer la partie
-        </button>
-      )}
-
+      {/* Settings Modal */}
       {showSettings && (
         <GameSettings room={room} onClose={() => setShowSettings(false)} />
       )}
@@ -138,16 +147,13 @@ const Lobby = () => {
   );
 };
 
-// Helper for avatar colors (should match other components)
+// Helper for avatar colors
 const getAvatarColor = (id) => {
   const colors = [
-    '#e74c3c', '#3498db', '#2ecc71', '#f1c40f', '#9b59b6', 
-    '#e67e22', '#1abc9c', '#34495e', '#ff0066', '#00ccff',
-    '#cc00ff', '#ffcc00', '#00ffcc', '#ff00cc', '#ccff00',
-    '#00cc00', '#0000cc', '#cc0000', '#666666', '#999999'
+    '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD', 
+    '#D4A5A5', '#9B59B6', '#3498DB', '#E67E22', '#2ECC71'
   ];
   return colors[id % colors.length];
 };
 
 export default Lobby;
-
