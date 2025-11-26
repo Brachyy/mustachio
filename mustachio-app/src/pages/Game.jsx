@@ -130,6 +130,8 @@ const Game = ({ room, playerId }) => {
         logoToPlay = { src: '/assets/pmu_logo.png', name: 'PMU' };
       } else if (activeCard.value === '8') {
         logoToPlay = { src: '/assets/medusa_logo.png', name: 'La Méduse' };
+      } else if (activeCard.value === 'K') {
+        logoToPlay = { src: '/assets/mustachio_logo.png', name: 'Mustachio' };
       }
 
       if (logoToPlay) {

@@ -98,7 +98,7 @@ const Rules = () => {
     },
     {
       title: 'Mustachio',
-      logo: '/assets/avatar.png',
+      logo: '/assets/mustachio_logo.png',
       rule: "Le joueur devient Mustachio. Il peut mettre son doigt sous son nez à tout moment. Le dernier à l'imiter boit double. Il a aussi une balle imaginaire pour doubler la sanction d'un joueur qui boit.",
       card: 'K',
       cardValue: 13
