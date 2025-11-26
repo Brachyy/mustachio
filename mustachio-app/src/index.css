@@ -48,14 +48,14 @@ body {
   margin: 0;
   min-height: 100vh;
   background-color: var(--bg-dark) !important;
-  background-image: url('/assets/background.png') !important;
+  background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/assets/background.png') !important;
   background-repeat: repeat !important;
   background-size: 400px !important;
   background-attachment: fixed !important;
   color: var(--text-light);
   overflow-x: hidden;
   position: relative;
-  animation: scroll-bg 20s linear infinite;
+  animation: scroll-bg 60s linear infinite;
 }
 
 @keyframes scroll-bg {
