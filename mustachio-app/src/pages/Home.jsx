@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import { createRoom } from '../services/roomService';
 import { useToast } from '../components/Toast';
+import PageTransition from '../components/PageTransition';
 
 const Home = () => {
   const navigate = useNavigate();

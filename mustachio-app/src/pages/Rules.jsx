@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, ChevronDown, ChevronUp } from 'lucide-react';
 import './Rules.css';
+import PageTransition from '../components/PageTransition';
 
 const Rules = () => {
   const navigate = useNavigate();
