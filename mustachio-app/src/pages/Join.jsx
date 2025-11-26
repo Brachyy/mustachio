@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { joinRoom } from '../services/roomService';
 import Loader from '../components/Loader';
+import PageTransition from '../components/PageTransition';
 import './Home.css'; // Reuse Home styles
 
 const Join = () => {
@@ -31,41 +32,43 @@ const Join = () => {
   if (isLoading) return <Loader text="Recherche de la salle..." fullScreen />;
 
   return (
-    <div className="home-container">
-      <div className="logo-container">
-        <h1>Rejoindre</h1>
-      </div>
-      
-      <div className="input-container">
-        <input
-          type="text"
-          placeholder="Ton pseudo"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="username-input"
-          style={{ marginBottom: '10px' }}
-        />
-        <input
-          type="text"
-          placeholder="Code de la salle"
-          value={roomCode}
-          onChange={(e) => setRoomCode(e.target.value)}
-          className="username-input"
-          maxLength={6}
-        />
-      </div>
+    <PageTransition>
+      <div className="home-container">
+        <div className="logo-container">
+          <h1>Rejoindre</h1>
+        </div>
+        
+        <div className="input-container">
+          <input
+            type="text"
+            placeholder="Ton pseudo"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="username-input"
+            style={{ marginBottom: '10px' }}
+          />
+          <input
+            type="text"
+            placeholder="Code de la salle"
+            value={roomCode}
+            onChange={(e) => setRoomCode(e.target.value)}
+            className="username-input"
+            maxLength={6}
+          />
+        </div>
 
-      {error && <div style={{ color: '#ff4444', marginBottom: '15px' }}>{error}</div>}
+        {error && <div style={{ color: '#ff4444', marginBottom: '15px' }}>{error}</div>}
 
-      <div className="actions-container">
-        <button onClick={handleJoin} className="btn btn-primary">
-          Valider
-        </button>
-        <button onClick={() => navigate('/')} className="btn btn-secondary">
-          Retour
-        </button>
+        <div className="actions-container">
+          <button onClick={handleJoin} className="btn btn-primary">
+            Valider
+          </button>
+          <button onClick={() => navigate('/')} className="btn btn-secondary">
+            Retour
+          </button>
+        </div>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

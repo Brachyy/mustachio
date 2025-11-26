@@ -106,7 +106,7 @@ const Rules = () => {
   ].sort((a, b) => a.cardValue - b.cardValue);
 
   return (
-    <div className="rules-page">
+    <PageTransition className="rules-page">
       <div className="rules-header">
         <button className="btn-icon back-btn" onClick={() => navigate('/')}>
           <ArrowLeft size={24} />
@@ -136,7 +136,7 @@ const Rules = () => {
           </div>
         ))}
       </div>
-    </div>
+    </PageTransition>
   );
 };
 

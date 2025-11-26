@@ -10,6 +10,8 @@ import GameSettings from '../components/GameSettings';
 import Game from './Game';
 import './Lobby.css';
 
+import PageTransition from '../components/PageTransition';
+
 const Lobby = () => {
   const { roomCode } = useParams();
   const navigate = useNavigate();
@@ -74,7 +76,7 @@ const Lobby = () => {
   const isHost = room.players[playerId]?.isHost;
 
   return (
-    <div className="lobby-container">
+    <PageTransition className="lobby-container">
       {/* Header: Back Button (Left) & Settings (Right) */}
       <header className="lobby-header">
         <button className="btn-icon back-btn" onClick={handleLeave} title="Quitter">
@@ -143,7 +145,7 @@ const Lobby = () => {
       {showSettings && (
         <GameSettings room={room} onClose={() => setShowSettings(false)} />
       )}
-    </div>
+    </PageTransition>
   );
 };
 

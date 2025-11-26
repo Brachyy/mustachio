@@ -9,6 +9,7 @@ import { LogOut } from 'lucide-react';
 import { useToast } from '../components/Toast';
 import './Game.css';
 import '../components/GameLogoOverlay.css';
+import PageTransition from '../components/PageTransition';
 
 const Game = ({ room, playerId }) => {
   const navigate = useNavigate();
@@ -210,7 +211,7 @@ const Game = ({ room, playerId }) => {
   }
 
   return (
-    <div className="game-container">
+    <PageTransition className="game-container">
       <div className="game-header">
         <button className="btn-icon" onClick={handleLeave} title="Quitter la partie">
           <LogOut size={24} />
@@ -324,7 +325,7 @@ const Game = ({ room, playerId }) => {
           )}
         </div>
       )}
-    </div>
+    </PageTransition>
   );
 };
 

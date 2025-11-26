@@ -37,7 +37,7 @@ const Home = () => {
   };
 
   return (
-    <div className="home-container">
+    <PageTransition className="home-container">
       <div className="logo-container">
         <img src="/assets/game_logo.png" alt="Mustachio" className="logo" />
         <h1>Mustachio</h1>
@@ -64,8 +64,9 @@ const Home = () => {
           Règles du Jeu
         </button>
       </div>
-    </div>
+    </PageTransition>
   );
 };
 
 export default Home;
+
