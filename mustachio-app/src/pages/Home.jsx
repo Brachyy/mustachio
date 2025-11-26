@@ -39,7 +39,7 @@ const Home = () => {
   return (
     <div className="home-container">
       <div className="logo-container">
-        <img src="/mustachio-logo.png" alt="Mustachio" className="logo" />
+        <img src="/assets/game_logo.png" alt="Mustachio" className="logo" />
         <h1>Mustachio</h1>
       </div>
       
