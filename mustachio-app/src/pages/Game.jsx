@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { useToast } from '../components/Toast';
 import './Game.css';
-import '../components/GameLogoOverlay.css';
+
 import PageTransition from '../components/PageTransition';
 
 const Game = ({ room, playerId }) => {
