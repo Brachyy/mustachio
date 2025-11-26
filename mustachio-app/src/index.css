@@ -40,21 +40,27 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-  width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-  background-size: 400% 400%;
-  animation: gradientBG 15s ease infinite;
-  overflow-x: hidden;
-  position: relative;
+html {
+  min-height: 100%;
 }
 
-@keyframes gradientBG {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background-color: var(--bg-dark) !important;
+  background-image: url('/assets/background.png') !important;
+  background-repeat: repeat !important;
+  background-size: 400px !important;
+  background-attachment: fixed !important;
+  color: var(--text-light);
+  overflow-x: hidden;
+  position: relative;
+  animation: scroll-bg 20s linear infinite;
+}
+
+@keyframes scroll-bg {
+  from { background-position: 0 0; }
+  to { background-position: 400px 400px; }
 }
 
 /* Global Button Styles */
