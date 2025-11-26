@@ -158,7 +158,7 @@ const Game = ({ room, playerId }) => {
       }, 2500); // Show logo for 2.5s
       return () => clearTimeout(animTimer);
     }
-  }, [viewState, activeCard]);
+  }, [viewState, activeCard?.value, activeCard?.suit]);
 
   useEffect(() => {
     // Cleanup sounds when leaving specific states
