@@ -109,7 +109,7 @@ const Lobby = () => {
           <div className="players-grid">
             {players.map((player) => (
               <div key={player.id} className="player-card">
-                <div className="avatar-wrapper" style={{ borderColor: getAvatarColor(player.avatar) }}>
+                <div className="avatar-wrapper" style={{ backgroundColor: getAvatarColor(player.avatar) }}>
                   <img src="/assets/avatar.png" alt="Avatar" />
                 </div>
                 <span className="player-name">{player.name}</span>
