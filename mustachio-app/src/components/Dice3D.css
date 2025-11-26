@@ -43,7 +43,10 @@
 /* Dot patterns (optional, using text for now) */
 
 @keyframes spin {
+  0% {
+    transform: translateZ(-50px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
   100% {
-    transform: rotate(1turn);
+    transform: translateZ(-50px) rotateX(720deg) rotateY(360deg) rotateZ(360deg);
   }
 }

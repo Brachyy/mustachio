@@ -10,14 +10,15 @@ const Dice3D = ({ value, rolling, size = 100, hidden = false }) => {
   // 5: (-90, 0)
   // 6: (90, 0)
   const getRotation = (val) => {
+    const base = 'translateZ(-50px)';
     switch (val) {
-      case 1: return 'rotateX(0deg) rotateY(0deg)';
-      case 6: return 'rotateX(180deg) rotateY(0deg)';
-      case 2: return 'rotateX(-90deg) rotateY(0deg)';
-      case 5: return 'rotateX(90deg) rotateY(0deg)';
-      case 3: return 'rotateX(0deg) rotateY(90deg)';
-      case 4: return 'rotateX(0deg) rotateY(-90deg)';
-      default: return 'rotateX(0deg) rotateY(0deg)';
+      case 1: return `${base} rotateX(0deg) rotateY(0deg)`;
+      case 6: return `${base} rotateX(180deg) rotateY(0deg)`;
+      case 2: return `${base} rotateX(-90deg) rotateY(0deg)`;
+      case 5: return `${base} rotateX(90deg) rotateY(0deg)`;
+      case 3: return `${base} rotateX(0deg) rotateY(90deg)`;
+      case 4: return `${base} rotateX(0deg) rotateY(-90deg)`;
+      default: return `${base} rotateX(0deg) rotateY(0deg)`;
     }
   };
 
