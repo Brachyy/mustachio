@@ -24,7 +24,7 @@ const Game = ({ room, playerId }) => {
   const [viewState, setViewState] = useState('idle');
   const [animatingCard, setAnimatingCard] = useState(null);
   const [animStyle, setAnimStyle] = useState({});
-  const [logoOverlay, setLogoOverlay] = useState(null); // { src: string, name: string }
+
 
   // Refs for piles to calculate positions
   const drawPileRef = useRef(null);
@@ -125,44 +125,17 @@ const Game = ({ room, playerId }) => {
     if (viewState === 'revealed' && activeCard) {
       soundService.playCardReveal(); // Play sound when card is revealed
       
-      // Check for special game logos
-      let logoToPlay = null;
-      if (activeCard.value === 'J') {
-        logoToPlay = { src: '/assets/pmu_logo.png', name: 'PMU' };
-      } else if (activeCard.value === '8') {
-        logoToPlay = { src: '/assets/medusa_logo.png', name: 'La Méduse' };
-      } else if (activeCard.value === 'K') {
-        logoToPlay = { src: '/assets/mustachio_logo.png', name: 'Mustachio' };
-      }
-
-      if (logoToPlay) {
-        // Play logo animation
-        const logoTimer = setTimeout(() => {
-          setLogoOverlay(logoToPlay);
-          setViewState('logo_anim');
-          soundService.playGo(); // Play a sound for the special game
-        }, 800);
-        return () => clearTimeout(logoTimer);
-      } else {
-        // Normal flow
-        const gameTimer = setTimeout(() => {
-          setViewState('minigame');
-        }, 1000);
-        return () => clearTimeout(gameTimer);
-      }
-    } else if (viewState === 'logo_anim') {
-      // After logo animation, go to minigame
-      const animTimer = setTimeout(() => {
-        setLogoOverlay(null);
+      // Normal flow for all cards
+      const gameTimer = setTimeout(() => {
         setViewState('minigame');
-      }, 2500); // Show logo for 2.5s
-      return () => clearTimeout(animTimer);
+      }, 1000);
+      return () => clearTimeout(gameTimer);
     }
   }, [viewState, activeCard?.value, activeCard?.suit]);
 
   useEffect(() => {
     // Cleanup sounds when leaving specific states
-    if (viewState !== 'revealed' && viewState !== 'logo_anim') {
+    if (viewState !== 'revealed') {
        // soundService.stopAll(); // Optional cleanup
     }
   }, [viewState]);
@@ -232,14 +205,7 @@ const Game = ({ room, playerId }) => {
       </div>
 
       {/* Logo Overlay Animation */}
-      {logoOverlay && (
-        <div className="game-logo-overlay">
-          <div className="logo-content pop-in-bounce">
-            <img src={logoOverlay.src} alt={logoOverlay.name} className="game-logo-img" />
-            <h2 className="game-logo-title">{logoOverlay.name}</h2>
-          </div>
-        </div>
-      )}
+
 
       {/* Main Game Area */}
       <div className="game-board">
