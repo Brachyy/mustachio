@@ -137,11 +137,12 @@ const Game = ({ room, playerId }) => {
 
       if (logoToPlay) {
         // Play logo animation
-        setTimeout(() => {
+        const logoTimer = setTimeout(() => {
           setLogoOverlay(logoToPlay);
           setViewState('logo_anim');
           soundService.playGo(); // Play a sound for the special game
         }, 800);
+        return () => clearTimeout(logoTimer);
       } else {
         // Normal flow
         const gameTimer = setTimeout(() => {
